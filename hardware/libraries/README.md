@@ -1,3 +1,3 @@
-# Project EDA libraries
+# Thư viện EDA của dự án
 
-Store project-owned symbols, footprints and verified 3D models. Record the source and verification status of externally derived items.
+Lưu các symbol, footprint và mô hình 3D đã kiểm chứng thuộc sở hữu của dự án. Ghi lại nguồn và trạng thái kiểm chứng của các hạng mục lấy từ bên ngoài.

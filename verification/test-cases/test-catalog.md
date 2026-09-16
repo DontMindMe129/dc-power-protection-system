@@ -1,140 +1,176 @@
-# Verification test catalog
+# Danh mục ca kiểm thử kiểm chứng
 
-## Common result fields
+## Các trường kết quả chung
 
-For every execution, copy the case into a dated result file and record hardware revision, firmware commit, source/load setup, instruments, raw readings, expected result, actual result and status.
+Với mỗi lần thực thi, sao chép ca kiểm thử vào một tệp kết quả có ngày tháng và ghi lại phiên bản phần cứng, commit firmware, thiết lập nguồn/tải, thiết bị đo, dữ liệu đọc thô, kết quả mong đợi, kết quả thực tế và trạng thái.
 
-## TC-START-001 - Safe startup
+## TC-START-001 - Khởi động an toàn
 
-**Requirements:** SYS-ELEC-001, SYS-ELEC-005  
-**Equipment:** 12 V current-limited source, small safe load, DMM  
-**Procedure:**
+**Yêu cầu:** SYS-ELEC-001, SYS-ELEC-005
 
-1. Set the source to 12.0 V with a conservative current limit.
-2. Connect the station and a small load.
-3. Apply power while observing the load output.
-4. Repeat from power-off and MCU-reset conditions.
+**Thiết bị:** Nguồn 12 V có giới hạn dòng, tải nhỏ an toàn, DMM
 
-**Pass:** The load is not energized before initialization checks complete; the station reaches `NORMAL` without uncontrolled switching.
+**Quy trình:**
 
-## TC-MEAS-001 - Input-voltage accuracy
+1. Đặt nguồn ở 12,0 V với giới hạn dòng thận trọng.
+2. Kết nối trạm và một tải nhỏ.
+3. Cấp nguồn trong khi quan sát đầu ra tải.
+4. Lặp lại từ trạng thái mất nguồn và trạng thái reset MCU.
 
-**Requirements:** SYS-MEAS-001, SYS-MEAS-004  
-**Equipment:** Adjustable source and reference DMM  
-**Points:** 9.0, 10.5, 12.0, 14.2 and 15.0 V, with protection action isolated or handled by the procedure.  
-**Pass:** Absolute displayed error at every point is <=0.20 V after calibration.
+**Đạt:** Tải không được cấp điện trước khi hoàn tất kiểm tra khởi tạo; trạm đạt trạng thái `NORMAL` mà không có đóng cắt mất kiểm soát.
 
-## TC-MEAS-002 - Load-voltage accuracy
+## TC-MEAS-001 - Độ chính xác điện áp đầu vào
 
-**Requirements:** SYS-MEAS-002, SYS-MEAS-004  
-**Procedure:** Exercise representative output values including 0 V with switch off and normal loaded operation. Compare terminal voltage to the display/UART value.  
-**Pass:** Absolute error at every declared point is <=0.20 V.
+**Yêu cầu:** SYS-MEAS-001, SYS-MEAS-004
 
-## TC-MEAS-003 - Load-current accuracy
+**Thiết bị:** Nguồn điều chỉnh được và DMM tham chiếu
 
-**Requirements:** SYS-MEAS-003, SYS-MEAS-005  
-**Equipment:** Current-limited 12 V source, load bank/electronic load, reference current measurement  
-**Points:** 0.10, 0.25, 0.50, 0.90, 1.00 and 1.20 A.  
-**Pass:** From 0.10 to 1.00 A, error is <=the greater of 0.05 A or 5% of reference; the measurement front end does not saturate at 1.20 A.
+**Các điểm thử:** 9,0; 10,5; 12,0; 14,2 và 15,0 V, với hành động bảo vệ được cô lập hoặc được xử lý theo quy trình.
 
-## TC-MEAS-004 - Voltage-drop calculation
+**Đạt:** Sai số tuyệt đối hiển thị tại mọi điểm <=0,20 V sau khi hiệu chuẩn.
 
-**Requirements:** SYS-MEAS-007  
-**Pass:** Reported drop equals reported `Vin - Vload` within numeric rounding and is consistent with DMM readings.
+## TC-MEAS-002 - Độ chính xác điện áp tải
 
-## TC-PATH-001 - One-ampere endurance and drop
+**Yêu cầu:** SYS-MEAS-002, SYS-MEAS-004
 
-**Requirements:** SYS-ELEC-003, SYS-ELEC-004, SYS-SAFE-003  
-**Equipment:** Current-limited 12 V source, 1 A load, two voltage measurements or repeatable DMM method, temperature instrument  
-**Procedure:**
+**Quy trình:** Thử các giá trị đầu ra đại diện, bao gồm 0 V khi công tắc tắt và hoạt động có tải bình thường. So sánh điện áp đầu cực với giá trị trên màn hình/UART.
 
-1. Verify all component and connector ratings.
-2. Operate at approximately 12 V and 1.0 A for 30 minutes.
-3. Record `Vin`, `Vload`, current and observed temperatures at start and regular intervals.
-4. Stop on any unsafe trend.
+**Đạt:** Sai số tuyệt đối tại mọi điểm đã công bố <=0,20 V.
 
-**Pass:** Operation remains controlled; station voltage drop is <=0.30 V after warm-up; no component exceeds its reviewed limit.
+## TC-MEAS-003 - Độ chính xác dòng tải
 
-## TC-UVP-001 - Sustained under-voltage trip
+**Yêu cầu:** SYS-MEAS-003, SYS-MEAS-005
 
-**Requirements:** SYS-PROT-001  
-**Equipment:** Adjustable source, timing instrument for final run  
-**Procedure:** Begin at 12 V, then reduce below 10.5 V while recording `Vin`, switch command/output and state.  
-**Pass:** A continuous low condition causes UVP trip after the configured confirmation interval and the load remains off.
+**Thiết bị:** Nguồn 12 V có giới hạn dòng, bộ tải/tải điện tử, phép đo dòng tham chiếu
 
-## TC-UVP-002 - Under-voltage transient rejection
+**Các điểm thử:** 0,10; 0,25; 0,50; 0,90; 1,00 và 1,20 A.
 
-**Requirements:** SYS-PROT-002  
-**Equipment:** Repeatable switched stimulus and timing instrument  
-**Pass:** A below-threshold pulse shorter than 300 ms does not latch UVP; a sustained case still trips.
+**Đạt:** Trong dải 0,10 đến 1,00 A, sai số <= giá trị lớn hơn giữa 0,05 A và 5% giá trị tham chiếu; mạch đầu vào đo không bão hòa tại 1,20 A.
 
-## TC-OVP-001 - Sustained over-voltage trip
+## TC-MEAS-004 - Tính toán độ sụt áp
 
-**Requirements:** SYS-PROT-003  
-**Equipment:** Adjustable current-limited source; do not exceed 15 V  
-**Pass:** A continuous value above 14.2 V causes OVP trip after the configured interval; the load remains disconnected.
+**Yêu cầu:** SYS-MEAS-007
 
-## TC-OCP-001 - Over-current warning
+**Đạt:** Độ sụt áp được báo cáo bằng `Vin - Vload` đã báo cáo trong giới hạn làm tròn số và nhất quán với giá trị đọc DMM.
 
-**Requirements:** SYS-PROT-004  
-**Equipment:** Controlled load  
-**Procedure:** Increase current above 0.90 A but below the trip threshold for more than 300 ms.  
-**Pass:** The station indicates an OCP warning and continues controlled monitoring.
+## TC-PATH-001 - Độ bền và sụt áp ở một ampere
 
-## TC-OCP-002 - Over-current trip
+**Yêu cầu:** SYS-ELEC-003, SYS-ELEC-004, SYS-SAFE-003
 
-**Requirements:** SYS-PROT-005  
-**Equipment:** Current-limited source, controlled load and timing instrument  
-**Procedure:** Apply a controlled step to at least 1.20 A without a hard short.  
-**Pass:** The station commands the switch off and enters latched OCP trip; final timing is evaluated in TC-TIME-001.
+**Thiết bị:** Nguồn 12 V có giới hạn dòng, tải 1 A, hai phép đo điện áp hoặc phương pháp DMM có khả năng lặp lại, thiết bị đo nhiệt độ
 
-## TC-TIME-001 - Physical disconnect response
+**Quy trình:**
 
-**Requirements:** SYS-PROT-005, SYS-VER-003  
-**Equipment:** Oscilloscope or logic analyzer plus safe current/voltage observation  
-**Measure:** Time from confirmed threshold crossing at the measurement/logic boundary to externally observable load disconnection.  
-**Pass:** <=100 ms for the provisional OCP requirement. The exact trigger points and channels must be recorded.
+1. Kiểm tra định mức của mọi linh kiện và đầu nối.
+2. Vận hành ở khoảng 12 V và 1,0 A trong 30 phút.
+3. Ghi `Vin`, `Vload`, dòng điện và nhiệt độ quan sát được lúc bắt đầu và theo các khoảng thời gian đều đặn.
+4. Dừng khi xuất hiện bất kỳ xu hướng mất an toàn nào.
 
-## TC-RESET-001 - Latched trip
+**Đạt:** Hoạt động vẫn được kiểm soát; độ sụt áp của trạm <=0,30 V sau khi ổn định nhiệt; không linh kiện nào vượt giới hạn đã rà soát.
 
-**Requirements:** SYS-PROT-006  
-**Pass:** Returning the fault variable to normal does not automatically reconnect the load.
+## TC-UVP-001 - Trip thấp áp kéo dài
 
-## TC-RESET-002 - Reset only after fault clear
+**Yêu cầu:** SYS-PROT-001
 
-**Requirements:** SYS-PROT-007  
-**Pass:** Reset is rejected while a fault is active and accepted only after all monitored faults remain clear for at least 1 s.
+**Thiết bị:** Nguồn điều chỉnh được, thiết bị đo thời gian cho lần chạy cuối
 
-## TC-RESET-003 - Intentional reset/debounce
+**Quy trình:** Bắt đầu ở 12 V, sau đó giảm xuống dưới 10,5 V trong khi ghi lại `Vin`, lệnh/đầu ra công tắc và trạng thái.
 
-**Requirements:** SYS-UI-004  
-**Pass:** Contact bounce or a single short invalid edge does not clear the latch; the documented user action does.
+**Đạt:** Điều kiện thấp áp liên tục gây trip UVP sau khoảng xác nhận đã cấu hình và tải tiếp tục tắt.
 
-## TC-UI-001 - State indication
+## TC-UVP-002 - Loại bỏ quá độ thấp áp
 
-**Requirements:** SYS-UI-001  
-**Pass:** `STARTUP`, `NORMAL`, `WARNING` and `TRIPPED` are unambiguous during injected or physical cases.
+**Yêu cầu:** SYS-PROT-002
 
-## TC-UI-002 - Measurement display
+**Thiết bị:** Kích thích đóng cắt có khả năng lặp lại và thiết bị đo thời gian
 
-**Requirements:** SYS-UI-002  
-**Pass:** `Vin`, `Vload` and `Iload` appear with units and do not show stale normal values as valid during a trip or sensor error.
+**Đạt:** Xung dưới ngưỡng ngắn hơn 300 ms không giữ chốt UVP; trường hợp kéo dài vẫn gây trip.
 
-## TC-DIAG-001 - Trip-cause indication
+## TC-OVP-001 - Trip quá áp kéo dài
 
-**Requirements:** SYS-PROT-008, SYS-UI-003  
-**Pass:** Separate UVP, OVP and OCP stimuli result in the correct retained cause.
+**Yêu cầu:** SYS-PROT-003
 
-## TC-DIAG-002 - UART evidence
+**Thiết bị:** Nguồn điều chỉnh được có giới hạn dòng; không vượt quá 15 V
 
-**Requirements:** SYS-DIAG-001  
-**Pass:** Logs contain measurement/state transitions needed to correlate the test without disrupting protection timing.
+**Đạt:** Giá trị liên tục trên 14,2 V gây trip OVP sau khoảng thời gian đã cấu hình; tải tiếp tục bị ngắt.
 
-## Hard-short test status
+## TC-OCP-001 - Cảnh báo quá dòng
 
-No direct hard-short test case is authorized in this revision. Such a test may be added only after:
+**Yêu cầu:** SYS-PROT-004
 
-- fast protection topology and component energy limits are reviewed;
-- a current-limited source and emergency disconnect are available;
-- the exact objective and pass criterion are specified;
-- the test is supervised under the course laboratory rules.
+**Thiết bị:** Tải có thể điều khiển
+
+**Quy trình:** Tăng dòng trên 0,90 A nhưng dưới ngưỡng trip trong hơn 300 ms.
+
+**Đạt:** Trạm chỉ báo cảnh báo OCP và tiếp tục giám sát có kiểm soát.
+
+## TC-OCP-002 - Trip quá dòng
+
+**Yêu cầu:** SYS-PROT-005
+
+**Thiết bị:** Nguồn có giới hạn dòng, tải có thể điều khiển và thiết bị đo thời gian
+
+**Quy trình:** Áp dụng bước dòng có kiểm soát đến ít nhất 1,20 A mà không tạo ngắn mạch cứng.
+
+**Đạt:** Trạm ra lệnh tắt công tắc và chuyển sang trip OCP được giữ chốt; định thời cuối cùng được đánh giá trong TC-TIME-001.
+
+## TC-TIME-001 - Đáp ứng ngắt vật lý
+
+**Yêu cầu:** SYS-PROT-005, SYS-VER-003
+
+**Thiết bị:** Oscilloscope hoặc logic analyzer cùng phương tiện quan sát dòng/điện áp an toàn
+
+**Đại lượng đo:** Thời gian từ khi xác nhận vượt ngưỡng tại ranh giới đo lường/logic đến khi quan sát được tải bị ngắt từ bên ngoài.
+
+**Đạt:** <=100 ms đối với yêu cầu OCP tạm thời. Phải ghi lại chính xác các điểm kích hoạt và kênh đo.
+
+## TC-RESET-001 - Trip được giữ chốt
+
+**Yêu cầu:** SYS-PROT-006
+
+**Đạt:** Đưa biến gây lỗi trở lại bình thường không tự động kết nối lại tải.
+
+## TC-RESET-002 - Chỉ reset sau khi hết lỗi
+
+**Yêu cầu:** SYS-PROT-007
+
+**Đạt:** Reset bị từ chối khi lỗi còn hoạt động và chỉ được chấp nhận sau khi mọi lỗi được giám sát đều hết lỗi liên tục ít nhất 1 s.
+
+## TC-RESET-003 - Reset có chủ ý/chống dội
+
+**Yêu cầu:** SYS-UI-004
+
+**Đạt:** Dội tiếp điểm hoặc một cạnh ngắn không hợp lệ không xóa chốt; thao tác người dùng đã được lập tài liệu thì có thể xóa chốt.
+
+## TC-UI-001 - Chỉ báo trạng thái
+
+**Yêu cầu:** SYS-UI-001
+
+**Đạt:** Các trạng thái `STARTUP`, `NORMAL`, `WARNING` và `TRIPPED` không gây nhầm lẫn trong các trường hợp giả lập hoặc vật lý.
+
+## TC-UI-002 - Hiển thị phép đo
+
+**Yêu cầu:** SYS-UI-002
+
+**Đạt:** `Vin`, `Vload` và `Iload` được hiển thị kèm đơn vị và không hiển thị các giá trị bình thường cũ như thể vẫn hợp lệ trong khi trip hoặc có lỗi cảm biến.
+
+## TC-DIAG-001 - Chỉ báo nguyên nhân trip
+
+**Yêu cầu:** SYS-PROT-008, SYS-UI-003
+
+**Đạt:** Các kích thích UVP, OVP và OCP riêng biệt tạo ra đúng nguyên nhân được lưu giữ.
+
+## TC-DIAG-002 - Bằng chứng UART
+
+**Yêu cầu:** SYS-DIAG-001
+
+**Đạt:** Log chứa các phép đo/chuyển trạng thái cần thiết để đối chiếu phép thử mà không làm ảnh hưởng định thời bảo vệ.
+
+## Trạng thái thử ngắn mạch cứng
+
+Không có ca thử ngắn mạch cứng trực tiếp nào được cho phép trong phiên bản này. Chỉ có thể bổ sung phép thử như vậy sau khi:
+
+- cấu trúc bảo vệ nhanh và giới hạn năng lượng của linh kiện đã được rà soát;
+- có nguồn giới hạn dòng và phương tiện ngắt khẩn cấp;
+- mục tiêu chính xác và tiêu chí đạt đã được quy định;
+- phép thử được giám sát theo quy định phòng thí nghiệm của môn học.

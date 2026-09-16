@@ -1,3 +1,3 @@
-# PCB source
+# Tệp nguồn PCB
 
-Store editable PCB source, stack-up/rules notes and reviewed exports here. Do not mix manufacturing outputs with editable layout files.
+Lưu tại đây tệp nguồn PCB có thể chỉnh sửa, ghi chú về stack-up/quy tắc và các tệp xuất đã được rà soát. Không trộn lẫn đầu ra sản xuất với tệp layout có thể chỉnh sửa.

@@ -1,5 +1,5 @@
-# Hardware specification
+# Đặc tả phần cứng
 
-Status: **placeholder - not approved**.
+Trạng thái: **khung chờ hoàn thiện - chưa được phê duyệt**.
 
-Future content: power tree, input protection, voltage/current sensing, load-switch topology, fast-current protection, MCU connections, UI, connectors, component ratings, thermal budget and PCB constraints.
+Nội dung dự kiến: cây nguồn, bảo vệ đầu vào, cảm biến điện áp/dòng điện, cấu trúc công tắc tải, bảo vệ nhanh theo dòng, kết nối MCU, giao diện người dùng, đầu nối, định mức linh kiện, ngân sách nhiệt và các ràng buộc PCB.

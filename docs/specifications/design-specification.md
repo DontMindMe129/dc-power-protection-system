@@ -1,5 +1,5 @@
-# Design specification
+# Đặc tả thiết kế
 
-Status: **placeholder - not approved**.
+Trạng thái: **khung chờ hoàn thiện - chưa được phê duyệt**.
 
-This document will define the chosen system architecture, hardware/software partitioning, interfaces and major design decisions after the requirements and feasibility review.
+Tài liệu này sẽ xác định kiến trúc hệ thống được chọn, cách phân chia phần cứng/phần mềm, các giao diện và những quyết định thiết kế chính sau khi hoàn tất rà soát yêu cầu và tính khả thi.

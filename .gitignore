@@ -1,4 +1,4 @@
-# Build outputs
+# Đầu ra quá trình biên dịch
 build/
 cmake-build-*/
 *.o
@@ -8,7 +8,7 @@ cmake-build-*/
 *.bin
 *.hex
 
-# IDE and operating-system files
+# Tệp của IDE và hệ điều hành
 .vscode/*.log
 .idea/
 *.swp
@@ -16,16 +16,16 @@ cmake-build-*/
 Thumbs.db
 .DS_Store
 
-# EDA backups and transient files
+# Tệp sao lưu và tệp tạm của EDA
 *-backups/
 *.lck
 *.lock
 *.tmp
 *.bak
 
-# Simulation transient outputs
+# Đầu ra mô phỏng tạm thời
 *.raw
 *.log
 *.op.raw
 
-# Keep curated verification evidence under verification/results/
+# Lưu bằng chứng kiểm chứng đã chọn lọc trong verification/results/

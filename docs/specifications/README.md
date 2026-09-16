@@ -1,3 +1,3 @@
-# Specifications
+# Các đặc tả
 
-The test specification is developed in this phase because testability determines feasibility. Design, hardware and software specifications remain intentionally incomplete until the requirements review is accepted.
+Đặc tả kiểm thử được xây dựng ngay trong giai đoạn này vì khả năng kiểm thử quyết định tính khả thi. Các đặc tả thiết kế, phần cứng và phần mềm được chủ ý để chưa hoàn thiện cho đến khi việc rà soát yêu cầu được chấp thuận.

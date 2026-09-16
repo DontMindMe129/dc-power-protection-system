@@ -1,5 +1,5 @@
-# Software specification
+# Đặc tả phần mềm
 
-Status: **placeholder - not approved**.
+Trạng thái: **khung chờ hoàn thiện - chưa được phê duyệt**.
 
-Future content: acquisition schedule, filtering, calibration, protection state machine, event timing, UI model, UART diagnostics, fault handling and module interfaces.
+Nội dung dự kiến: lịch thu thập dữ liệu, lọc, hiệu chuẩn, máy trạng thái bảo vệ, định thời sự kiện, mô hình giao diện người dùng, chẩn đoán qua UART, xử lý lỗi và giao diện giữa các mô-đun.

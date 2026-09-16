@@ -1,7 +1,7 @@
-# Hardware
+# Phần cứng
 
-Status: **not started**.
+Trạng thái: **chưa bắt đầu**.
 
-Planned blocks: DC input and protection, local supply, voltage sensing, current sensing, hardware fast-current protection, load switch, MCU, OLED/buttons/indicators, UART/SWD, connectors and test points.
+Các khối dự kiến: đầu vào DC và bảo vệ, nguồn cục bộ, cảm biến điện áp, cảm biến dòng điện, bảo vệ nhanh theo dòng bằng phần cứng, công tắc tải, MCU, OLED/nút nhấn/chỉ báo, UART/SWD, đầu nối và điểm đo kiểm.
 
-The group is responsible for the internal `DC IN` to `DC OUT` power path. The external source and external load are test fixtures, not project circuitry.
+Nhóm chịu trách nhiệm cho đường công suất nội bộ từ `DC IN` đến `DC OUT`. Nguồn và tải bên ngoài là thiết bị phục vụ kiểm thử, không thuộc mạch điện của dự án.

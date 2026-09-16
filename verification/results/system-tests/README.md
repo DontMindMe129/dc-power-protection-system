@@ -1,3 +1,3 @@
-# System-test evidence
+# Bằng chứng kiểm thử hệ thống
 
-Store integrated UVP/OVP/OCP, UI, reset, response-time and endurance records here.
+Lưu tại đây các bản ghi tích hợp về UVP/OVP/OCP, giao diện người dùng, reset, thời gian đáp ứng và thử nghiệm độ bền.

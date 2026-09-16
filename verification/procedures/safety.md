@@ -1,31 +1,31 @@
-# Powered-test safety procedure
+# Quy trình an toàn khi thử có cấp nguồn
 
-## Mandatory rules
+## Quy tắc bắt buộc
 
-- Work only with isolated low-voltage DC within the approved 9-15 V envelope.
-- Do not connect the project directly to mains voltage.
-- Verify source polarity and actual voltage with a DMM before connection.
-- Use a source with known current limiting, or add a reviewed fuse/series limit appropriate to the stage.
-- Keep an accessible input power disconnect.
-- De-energize the setup before changing wiring or load values.
-- Treat power resistors as burn hazards; place them on a nonflammable surface with clearance.
-- Do not rely on a solderless breadboard for the final 1 A power path without explicit evaluation.
-- Do not short `DC OUT` using an uncontrolled fixed adapter.
-- Stop immediately for smoke, odor, arcing, unstable current, repeated MCU reset or unexpected heating.
+- Chỉ làm việc với DC điện áp thấp cách ly trong miền 9-15 V đã được phê duyệt.
+- Không kết nối trực tiếp dự án với điện áp lưới.
+- Kiểm tra cực tính nguồn và điện áp thực tế bằng DMM trước khi kết nối.
+- Sử dụng nguồn có giới hạn dòng đã biết, hoặc bổ sung cầu chì/giới hạn nối tiếp phù hợp với giai đoạn và đã được rà soát.
+- Duy trì phương tiện ngắt nguồn đầu vào dễ tiếp cận.
+- Ngắt nguồn khỏi thiết lập trước khi thay đổi dây nối hoặc giá trị tải.
+- Xem điện trở công suất là nguy cơ gây bỏng; đặt chúng trên bề mặt không cháy với khoảng hở phù hợp.
+- Không phụ thuộc vào breadboard không hàn cho đường công suất 1 A cuối cùng nếu chưa đánh giá rõ ràng.
+- Không nối tắt `DC OUT` khi dùng adapter cố định không được kiểm soát.
+- Dừng ngay khi có khói, mùi, hồ quang, dòng không ổn định, MCU reset lặp lại hoặc phát nhiệt bất thường.
 
-## Pre-test checklist
+## Danh sách kiểm tra trước thử nghiệm
 
-- [ ] Test-case revision identified.
-- [ ] Hardware and firmware revisions recorded.
-- [ ] Wiring checked against a diagram.
-- [ ] Source voltage verified before connection.
-- [ ] Current limit or fuse verified.
-- [ ] Load value and power rating calculated.
-- [ ] DMM leads are in the correct jacks and mode.
-- [ ] Emergency power disconnect is reachable.
-- [ ] Expected readings and stop thresholds are written down.
-- [ ] No unauthorized short-circuit step is present.
+- [ ] Đã xác định phiên bản ca kiểm thử.
+- [ ] Đã ghi phiên bản phần cứng và firmware.
+- [ ] Đã kiểm tra dây nối theo sơ đồ.
+- [ ] Đã kiểm tra điện áp nguồn trước khi kết nối.
+- [ ] Đã kiểm tra giới hạn dòng hoặc cầu chì.
+- [ ] Đã tính giá trị tải và định mức công suất.
+- [ ] Que đo DMM được cắm đúng cổng và chọn đúng chế độ.
+- [ ] Có thể tiếp cận phương tiện ngắt nguồn khẩn cấp.
+- [ ] Đã ghi lại giá trị đọc dự kiến và ngưỡng dừng.
+- [ ] Không có bước thử ngắn mạch chưa được cho phép.
 
-## After test
+## Sau thử nghiệm
 
-Remove input power, allow power resistors to cool, save raw measurements and record any anomaly before altering the setup.
+Ngắt nguồn đầu vào, chờ điện trở công suất nguội, lưu dữ liệu đo thô và ghi lại mọi bất thường trước khi thay đổi thiết lập.

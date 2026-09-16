@@ -1,3 +1,3 @@
-# Verification tools
+# Công cụ kiểm chứng
 
-Future scripts may generate ADC stimuli, parse UART logs, calculate measurement error or plot results. Scripts must not silently rewrite raw evidence.
+Các script trong tương lai có thể tạo kích thích ADC, phân tích log UART, tính sai số đo hoặc vẽ kết quả. Script không được âm thầm ghi lại bằng chứng thô.

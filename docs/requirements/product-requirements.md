@@ -1,111 +1,111 @@
-# Product requirements
+# Yêu cầu sản phẩm
 
-## 1. Purpose
+## 1. Mục đích
 
-The product is a low-voltage DC monitoring and protection station placed between an external source and an external load. It provides visibility into the electrical state of the path and disconnects the load when an abnormal voltage or current condition is confirmed.
+Sản phẩm là một trạm giám sát và bảo vệ DC điện áp thấp, được đặt giữa nguồn bên ngoài và tải bên ngoài. Sản phẩm cho phép quan sát trạng thái điện của đường công suất và ngắt tải khi xác nhận có điều kiện điện áp hoặc dòng điện bất thường.
 
-This document describes user and product needs. Detailed measurable statements are maintained in `system-requirements.md`.
+Tài liệu này mô tả nhu cầu của người dùng và sản phẩm. Các phát biểu chi tiết, có thể đo được, được duy trì trong `system-requirements.md`.
 
-## 2. Problem statement
+## 2. Mô tả vấn đề
 
-A simple DC source-load connection gives the user little information about input voltage, load voltage, load current or the reason a load stopped operating. It may also leave the load connected during an abnormal condition. The proposed product adds measurement, indication and controlled disconnection without designing the external source or the external load.
+Kết nối đơn giản giữa nguồn DC và tải cung cấp cho người dùng rất ít thông tin về điện áp đầu vào, điện áp tải, dòng tải hoặc nguyên nhân khiến tải ngừng hoạt động. Kết nối đó cũng có thể vẫn duy trì tải trong một điều kiện bất thường. Sản phẩm đề xuất bổ sung khả năng đo lường, chỉ báo và ngắt có kiểm soát mà không bao gồm việc thiết kế nguồn hoặc tải bên ngoài.
 
-## 3. Stakeholders
+## 3. Các bên liên quan
 
-| Stakeholder | Need |
+| Bên liên quan | Nhu cầu |
 | --- | --- |
-| User/operator | See present electrical values and protection state |
-| User/operator | Receive a warning before or when an abnormal condition occurs |
-| User/operator | Safely reset the station after the cause of a trip is removed |
-| Development team | Demonstrate balanced hardware, firmware, integration and testing work |
-| Course assessor | Trace requirements to design evidence and test results |
+| Người dùng/người vận hành | Xem các giá trị điện hiện tại và trạng thái bảo vệ |
+| Người dùng/người vận hành | Nhận cảnh báo trước hoặc khi xảy ra điều kiện bất thường |
+| Người dùng/người vận hành | Reset trạm một cách an toàn sau khi nguyên nhân trip đã được loại bỏ |
+| Nhóm phát triển | Thể hiện khối lượng công việc cân bằng giữa phần cứng, firmware, tích hợp và kiểm thử |
+| Giảng viên đánh giá | Truy vết yêu cầu đến bằng chứng thiết kế và kết quả kiểm thử |
 
-## 4. System boundary
+## 4. Ranh giới hệ thống
 
-### Inside the project
+### Bên trong dự án
 
-- DC input and output connectors.
-- Input protection required for the selected operating envelope.
-- Voltage and current sensing.
-- Controllable load switch.
-- MCU, local power supply and programming/debug interface.
-- Local display, buttons and audible/visual indication.
-- Firmware for acquisition, filtering, protection state management, UI and diagnostics.
-- The PCB power path from `DC IN` to `DC OUT`.
+- Đầu nối đầu vào và đầu ra DC.
+- Bảo vệ đầu vào cần thiết cho miền hoạt động đã chọn.
+- Cảm biến điện áp và dòng điện.
+- Công tắc tải có thể điều khiển.
+- MCU, nguồn cục bộ và giao diện lập trình/gỡ lỗi.
+- Màn hình cục bộ, nút nhấn và chỉ báo âm thanh/hình ảnh.
+- Firmware cho thu thập dữ liệu, lọc, quản lý trạng thái bảo vệ, giao diện người dùng và chẩn đoán.
+- Đường công suất trên PCB từ `DC IN` đến `DC OUT`.
 
-### Outside the project
+### Bên ngoài dự án
 
-- The external DC source.
-- The external load.
-- The physical cable/path after `DC OUT` unless a dedicated test cable is documented.
-- Design of a battery charger, bench supply or load itself.
-- Mains-voltage switching.
+- Nguồn DC bên ngoài.
+- Tải bên ngoài.
+- Cáp/đường dẫn vật lý sau `DC OUT`, trừ khi có cáp kiểm thử chuyên dụng được lập tài liệu.
+- Thiết kế bộ sạc pin, nguồn bàn thử hoặc bản thân tải.
+- Đóng cắt điện áp lưới.
 
-## 5. Baseline use environment
+## 5. Môi trường sử dụng tham chiếu
 
-| Parameter | Baseline | Status |
+| Tham số | Giá trị tham chiếu | Trạng thái |
 | --- | --- | --- |
-| Nominal source | 12 V DC | Selected for feasibility |
-| Evaluation range | 9-15 V DC | Selected for feasibility |
-| Continuous load current | Up to 1.0 A | Selected for feasibility |
-| Indoor laboratory use | Dry, supervised environment | Assumption |
-| Input source behavior | Regulated DC source or equivalent test source | Assumption |
+| Nguồn danh định | 12 V DC | Được chọn để đánh giá tính khả thi |
+| Dải đánh giá | 9-15 V DC | Được chọn để đánh giá tính khả thi |
+| Dòng tải liên tục | Tối đa 1,0 A | Được chọn để đánh giá tính khả thi |
+| Sử dụng trong phòng thí nghiệm trong nhà | Môi trường khô ráo, có giám sát | Giả định |
+| Đặc tính nguồn đầu vào | Nguồn DC ổn áp hoặc nguồn thử tương đương | Giả định |
 
-The 9-15 V range is the range over which the station must remain controlled and measure/protect the path. It is not the default "normal" voltage window. The default UVP/OVP thresholds are narrower and provisional.
+Dải 9-15 V là dải mà trong đó trạm phải duy trì trạng thái có kiểm soát và đo lường/bảo vệ đường công suất. Đây không phải cửa sổ điện áp "bình thường" mặc định. Các ngưỡng UVP/OVP mặc định hẹp hơn và vẫn là giá trị tạm thời.
 
-## 6. Product-level needs
+## 6. Nhu cầu cấp sản phẩm
 
-| ID | Product need |
+| Mã | Nhu cầu sản phẩm |
 | --- | --- |
-| PR-01 | The product shall show the user whether the load is connected, warned or tripped. |
-| PR-02 | The product shall measure and display `Vin`, `Vload` and `Iload`. |
-| PR-03 | The product shall detect sustained under-voltage, over-voltage and over-current conditions. |
-| PR-04 | The product shall disconnect the external load when a trip condition is confirmed. |
-| PR-05 | A protection trip shall remain latched until the fault clears and the user requests a reset. |
-| PR-06 | Short-circuit energy shall be limited by dedicated hardware rather than relying only on MCU software. |
-| PR-07 | The product shall provide sufficient diagnostic information to identify the trip cause. |
-| PR-08 | The product shall be testable without intentionally exposing the MCU or operator to uncontrolled fault energy. |
-| PR-09 | Requirements, design decisions and results shall be traceable in the repository. |
+| PR-01 | Sản phẩm phải cho người dùng biết tải đang được kết nối, đang có cảnh báo hay đã trip. |
+| PR-02 | Sản phẩm phải đo và hiển thị `Vin`, `Vload` và `Iload`. |
+| PR-03 | Sản phẩm phải phát hiện các điều kiện thấp áp, quá áp và quá dòng kéo dài. |
+| PR-04 | Sản phẩm phải ngắt tải bên ngoài khi xác nhận điều kiện trip. |
+| PR-05 | Trạng thái trip bảo vệ phải được giữ chốt cho đến khi lỗi được loại bỏ và người dùng yêu cầu reset. |
+| PR-06 | Năng lượng ngắn mạch phải được giới hạn bằng phần cứng chuyên dụng thay vì chỉ dựa vào phần mềm MCU. |
+| PR-07 | Sản phẩm phải cung cấp đủ thông tin chẩn đoán để xác định nguyên nhân trip. |
+| PR-08 | Sản phẩm phải có khả năng kiểm thử mà không cố ý khiến MCU hoặc người vận hành tiếp xúc với năng lượng lỗi không được kiểm soát. |
+| PR-09 | Các yêu cầu, quyết định thiết kế và kết quả phải có khả năng truy vết trong kho lưu trữ. |
 
-## 7. V1 scope
+## 7. Phạm vi V1
 
-### Included
+### Bao gồm
 
-- Input/load voltage measurement.
-- Load-current measurement.
-- Under-voltage protection (UVP).
-- Over-voltage protection (OVP).
-- Over-current protection (OCP).
-- Warning, trip, latched state and manual reset behavior.
-- OLED/status indication and UART diagnostic output.
-- Hardware fast protection for destructive current faults.
-- Calibration and basic measurement-error characterization.
+- Đo điện áp đầu vào/tải.
+- Đo dòng tải.
+- Bảo vệ thấp áp (UVP).
+- Bảo vệ quá áp (OVP).
+- Bảo vệ quá dòng (OCP).
+- Hành vi cảnh báo, trip, giữ chốt trạng thái và reset thủ công.
+- Chỉ báo trạng thái trên OLED và đầu ra chẩn đoán UART.
+- Bảo vệ nhanh bằng phần cứng đối với các lỗi dòng điện có khả năng phá hủy.
+- Hiệu chuẩn và đặc trưng hóa sai số đo cơ bản.
 
-### Deferred
+### Hoãn lại
 
-- Over-temperature protection.
-- Energy metering with billing-grade accuracy.
-- Wireless/IoT connectivity.
-- Automatic reconnection after a trip.
-- Mains AC operation.
-- Arbitrary source and load compatibility.
+- Bảo vệ quá nhiệt.
+- Đo năng lượng với độ chính xác cấp tính cước.
+- Kết nối không dây/IoT.
+- Tự động kết nối lại sau khi trip.
+- Hoạt động với điện lưới AC.
+- Tương thích với mọi loại nguồn và tải.
 
-## 8. Product acceptance gates
+## 8. Các cổng chấp nhận sản phẩm
 
-The V1 prototype is acceptable only when:
+Nguyên mẫu V1 chỉ được chấp nhận khi:
 
-1. Static voltage and current measurement requirements pass.
-2. UVP, OVP and OCP behavior passes for threshold, debounce and latch/reset behavior.
-3. The 1 A power-path test completes without unsafe heating or loss of control.
-4. A temporary lab setup verifies the externally observable trip response time.
-5. No uncontrolled direct-short test is required to claim basic firmware functionality.
-6. Every failed requirement is documented with evidence and disposition.
+1. Các yêu cầu đo điện áp và dòng điện tĩnh đạt yêu cầu.
+2. Hành vi UVP, OVP và OCP đạt yêu cầu về ngưỡng, chống dội và giữ chốt/reset.
+3. Phép thử đường công suất 1 A hoàn tất mà không gây nóng mất an toàn hoặc mất kiểm soát.
+4. Một thiết lập phòng thí nghiệm tạm thời kiểm chứng được thời gian đáp ứng trip quan sát được từ bên ngoài.
+5. Không cần phép thử ngắn mạch trực tiếp không được kiểm soát để chứng minh chức năng firmware cơ bản.
+6. Mọi yêu cầu không đạt đều được lập tài liệu kèm bằng chứng và hướng xử lý.
 
-## 9. Open product decisions
+## 9. Các quyết định sản phẩm còn mở
 
-- Exact load-switch topology and component.
-- Current-sense topology and shunt value.
-- Input reverse-polarity and surge strategy.
-- Exact PCB form factor and connector family.
-- Whether a temperature sensor/OTP is added after the V1 feasibility review.
-- Final course deadline, team roles and submission format.
+- Cấu trúc và linh kiện chính xác của công tắc tải.
+- Cấu trúc cảm biến dòng và giá trị điện trở shunt.
+- Chiến lược bảo vệ ngược cực và xung quá áp đầu vào.
+- Hình dạng/kích thước PCB và họ đầu nối chính xác.
+- Có bổ sung cảm biến nhiệt độ/OTP sau khi đánh giá tính khả thi V1 hay không.
+- Hạn chót môn học, vai trò trong nhóm và định dạng nộp bài cuối cùng.

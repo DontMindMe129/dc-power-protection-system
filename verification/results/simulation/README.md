@@ -1,3 +1,3 @@
-# Simulation evidence
+# Bằng chứng mô phỏng
 
-Store curated plots, tables and summaries that support a requirement or design decision. Link each item to the simulation source under `hardware/simulation/` and to requirement IDs.
+Lưu các đồ thị, bảng và bản tóm tắt đã chọn lọc để hỗ trợ một yêu cầu hoặc quyết định thiết kế. Liên kết từng hạng mục với tệp nguồn mô phỏng trong `hardware/simulation/` và với các mã yêu cầu.

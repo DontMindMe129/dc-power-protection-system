@@ -1,47 +1,47 @@
-# Requirements traceability matrix
+# Ma trận truy vết yêu cầu
 
-Status values: `PLANNED`, `BLOCKED`, `PASS`, `FAIL`, `NOT RUN`.
+Các giá trị trạng thái: `ĐÃ LÊN KẾ HOẠCH`, `BỊ CHẶN`, `ĐẠT`, `KHÔNG ĐẠT`, `CHƯA CHẠY`.
 
-| Requirement | Primary verification | Current status | Blocking resource or decision |
+| Yêu cầu | Phương pháp kiểm chứng chính | Trạng thái hiện tại | Tài nguyên hoặc quyết định gây chặn |
 | --- | --- | --- | --- |
-| SYS-ELEC-001 | Inspection + TC-START-001 | NOT RUN | Hardware not built |
-| SYS-ELEC-002 | TC-MEAS-001, TC-UVP-001, TC-OVP-001 | BLOCKED | Adjustable 9-15 V source needed |
-| SYS-ELEC-003 | TC-PATH-001 | BLOCKED | 1 A load and temperature observation needed |
-| SYS-ELEC-004 | TC-PATH-001 | BLOCKED | Hardware not built |
-| SYS-ELEC-005 | TC-START-001 | NOT RUN | Hardware/firmware not built |
-| SYS-ELEC-006 | Design review | NOT RUN | Fast protection topology TBD |
-| SYS-ELEC-007 | Design review + controlled fault test | BLOCKED | Current-limited lab setup required |
-| SYS-MEAS-001 | TC-MEAS-001 | BLOCKED | Adjustable source needed |
-| SYS-MEAS-002 | TC-MEAS-002 | BLOCKED | Prototype needed |
-| SYS-MEAS-003 | TC-MEAS-003 | BLOCKED | Load bank needed |
-| SYS-MEAS-004 | TC-MEAS-001/002 | BLOCKED | Calibrated reference DMM needed |
-| SYS-MEAS-005 | TC-MEAS-003 | BLOCKED | Load bank/reference measurement needed |
-| SYS-MEAS-006 | Inspection + later firmware test | NOT RUN | Algorithm not designed |
-| SYS-MEAS-007 | TC-MEAS-004 | NOT RUN | Prototype needed |
-| SYS-PROT-001 | TC-UVP-001 | BLOCKED | Adjustable source needed |
-| SYS-PROT-002 | TC-UVP-002 | BLOCKED | Repeatable transient source/timing needed |
-| SYS-PROT-003 | TC-OVP-001 | BLOCKED | Adjustable source needed |
-| SYS-PROT-004 | TC-OCP-001 | BLOCKED | Controllable load needed |
-| SYS-PROT-005 | TC-OCP-002 + TC-TIME-001 | BLOCKED | Controllable load and timing instrument needed |
-| SYS-PROT-006 | TC-RESET-001 | NOT RUN | Prototype needed |
-| SYS-PROT-007 | TC-RESET-002 | NOT RUN | Prototype needed |
-| SYS-PROT-008 | TC-DIAG-001 | NOT RUN | UI/firmware not built |
-| SYS-PROT-009 | Inspection | PLANNED | Enforced by design review |
-| SYS-UI-001 | TC-UI-001 | NOT RUN | UI not built |
-| SYS-UI-002 | TC-UI-002 | NOT RUN | UI not built |
-| SYS-UI-003 | TC-DIAG-001 | NOT RUN | UI not built |
-| SYS-UI-004 | TC-RESET-003 | NOT RUN | Input design not built |
-| SYS-DIAG-001 | TC-DIAG-002 | NOT RUN | UART format TBD |
-| SYS-SAFE-001 | Pre-test checklist | PLANNED | Suitable current-limited source must be obtained |
-| SYS-SAFE-002 | Procedure audit | PLANNED | Explicitly prohibited in safety procedure |
-| SYS-SAFE-003 | Design review | NOT RUN | Components TBD |
-| SYS-SAFE-004 | Pre-test checklist | PLANNED | Test setup dependent |
-| SYS-VER-001 | This matrix | PLANNED | Update when requirements change |
-| SYS-VER-002 | Result template review | PLANNED | No tests executed |
-| SYS-VER-003 | TC-TIME-001 | BLOCKED | Oscilloscope/logic analyzer required |
+| SYS-ELEC-001 | Kiểm tra trực quan + TC-START-001 | CHƯA CHẠY | Phần cứng chưa được chế tạo |
+| SYS-ELEC-002 | TC-MEAS-001, TC-UVP-001, TC-OVP-001 | BỊ CHẶN | Cần nguồn 9-15 V điều chỉnh được |
+| SYS-ELEC-003 | TC-PATH-001 | BỊ CHẶN | Cần tải 1 A và phương tiện quan sát nhiệt độ |
+| SYS-ELEC-004 | TC-PATH-001 | BỊ CHẶN | Phần cứng chưa được chế tạo |
+| SYS-ELEC-005 | TC-START-001 | CHƯA CHẠY | Phần cứng/firmware chưa được xây dựng |
+| SYS-ELEC-006 | Rà soát thiết kế | CHƯA CHẠY | Chưa xác định cấu trúc bảo vệ nhanh |
+| SYS-ELEC-007 | Rà soát thiết kế + thử lỗi có kiểm soát | BỊ CHẶN | Cần thiết lập phòng thí nghiệm có giới hạn dòng |
+| SYS-MEAS-001 | TC-MEAS-001 | BỊ CHẶN | Cần nguồn điều chỉnh được |
+| SYS-MEAS-002 | TC-MEAS-002 | BỊ CHẶN | Cần nguyên mẫu |
+| SYS-MEAS-003 | TC-MEAS-003 | BỊ CHẶN | Cần bộ tải |
+| SYS-MEAS-004 | TC-MEAS-001/002 | BỊ CHẶN | Cần DMM tham chiếu đã hiệu chuẩn |
+| SYS-MEAS-005 | TC-MEAS-003 | BỊ CHẶN | Cần bộ tải/phép đo tham chiếu |
+| SYS-MEAS-006 | Kiểm tra trực quan + thử firmware sau này | CHƯA CHẠY | Thuật toán chưa được thiết kế |
+| SYS-MEAS-007 | TC-MEAS-004 | CHƯA CHẠY | Cần nguyên mẫu |
+| SYS-PROT-001 | TC-UVP-001 | BỊ CHẶN | Cần nguồn điều chỉnh được |
+| SYS-PROT-002 | TC-UVP-002 | BỊ CHẶN | Cần nguồn quá độ/thời gian có khả năng lặp lại |
+| SYS-PROT-003 | TC-OVP-001 | BỊ CHẶN | Cần nguồn điều chỉnh được |
+| SYS-PROT-004 | TC-OCP-001 | BỊ CHẶN | Cần tải có thể điều khiển |
+| SYS-PROT-005 | TC-OCP-002 + TC-TIME-001 | BỊ CHẶN | Cần tải có thể điều khiển và thiết bị đo thời gian |
+| SYS-PROT-006 | TC-RESET-001 | CHƯA CHẠY | Cần nguyên mẫu |
+| SYS-PROT-007 | TC-RESET-002 | CHƯA CHẠY | Cần nguyên mẫu |
+| SYS-PROT-008 | TC-DIAG-001 | CHƯA CHẠY | Giao diện người dùng/firmware chưa được xây dựng |
+| SYS-PROT-009 | Kiểm tra trực quan | ĐÃ LÊN KẾ HOẠCH | Được bắt buộc thông qua rà soát thiết kế |
+| SYS-UI-001 | TC-UI-001 | CHƯA CHẠY | Giao diện người dùng chưa được xây dựng |
+| SYS-UI-002 | TC-UI-002 | CHƯA CHẠY | Giao diện người dùng chưa được xây dựng |
+| SYS-UI-003 | TC-DIAG-001 | CHƯA CHẠY | Giao diện người dùng chưa được xây dựng |
+| SYS-UI-004 | TC-RESET-003 | CHƯA CHẠY | Thiết kế đầu vào chưa được xây dựng |
+| SYS-DIAG-001 | TC-DIAG-002 | CHƯA CHẠY | Chưa xác định định dạng UART |
+| SYS-SAFE-001 | Danh sách kiểm tra trước thử nghiệm | ĐÃ LÊN KẾ HOẠCH | Phải có nguồn phù hợp với giới hạn dòng |
+| SYS-SAFE-002 | Đánh giá quy trình | ĐÃ LÊN KẾ HOẠCH | Đã bị cấm rõ ràng trong quy trình an toàn |
+| SYS-SAFE-003 | Rà soát thiết kế | CHƯA CHẠY | Chưa xác định linh kiện |
+| SYS-SAFE-004 | Danh sách kiểm tra trước thử nghiệm | ĐÃ LÊN KẾ HOẠCH | Phụ thuộc thiết lập kiểm thử |
+| SYS-VER-001 | Ma trận này | ĐÃ LÊN KẾ HOẠCH | Cập nhật khi yêu cầu thay đổi |
+| SYS-VER-002 | Rà soát mẫu kết quả | ĐÃ LÊN KẾ HOẠCH | Chưa thực thi phép thử nào |
+| SYS-VER-003 | TC-TIME-001 | BỊ CHẶN | Cần oscilloscope/logic analyzer |
 
-## Coverage summary
+## Tóm tắt độ bao phủ
 
-- Static functional behavior is testable with a DMM, appropriate resistive loads and a safely adjustable DC level.
-- Dynamic threshold timing is not fully verifiable using only a fixed adapter and multimeter.
-- Hard-short behavior must remain blocked until the hardware protection design is reviewed and a current-limited lab source is available.
+- Hành vi chức năng tĩnh có thể được kiểm thử bằng DMM, tải điện trở phù hợp và mức DC điều chỉnh được an toàn.
+- Không thể kiểm chứng đầy đủ định thời ngưỡng động nếu chỉ dùng adapter cố định và đồng hồ vạn năng.
+- Hành vi ngắn mạch cứng phải tiếp tục ở trạng thái bị chặn cho đến khi thiết kế bảo vệ phần cứng được rà soát và có nguồn phòng thí nghiệm giới hạn dòng.

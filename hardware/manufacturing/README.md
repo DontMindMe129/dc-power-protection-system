@@ -1,3 +1,3 @@
-# Manufacturing outputs
+# Đầu ra sản xuất
 
-Store reviewed Gerbers, drill files, assembly drawings and release notes only when a PCB revision is frozen. Prefer attaching final manufacturing packages to tagged releases.
+Chỉ lưu Gerber, tệp khoan, bản vẽ lắp ráp và ghi chú phát hành đã được rà soát khi một phiên bản PCB đã được chốt. Ưu tiên đính kèm gói sản xuất cuối cùng vào bản phát hành có gắn thẻ.

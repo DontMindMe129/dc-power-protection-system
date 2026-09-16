@@ -1,3 +1,3 @@
-# Presentation
+# Bài thuyết trình
 
-Placeholder for presentation source and approved exports.
+Khung chờ cho tệp nguồn bài thuyết trình và các bản xuất đã được phê duyệt.

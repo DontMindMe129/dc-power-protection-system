@@ -1,53 +1,55 @@
-# Use cases
+# Các ca sử dụng
 
-## UC-01 - Normal monitoring
+## UC-01 - Giám sát bình thường
 
-**Actor:** Operator  
-**Precondition:** A valid source and load are connected; no trip is latched.  
-**Main flow:**
+**Tác nhân:** Người vận hành
 
-1. The station initializes with the load output disabled.
-2. Initial measurements are checked.
-3. The station enables the load output.
-4. The station periodically measures `Vin`, `Vload` and `Iload`.
-5. The UI shows the measurements and `NORMAL` state.
+**Điều kiện tiên quyết:** Nguồn và tải hợp lệ đã được kết nối; không có trip nào đang được giữ chốt.
 
-**Success condition:** The load remains powered and measurements remain within specified error limits.
+**Luồng chính:**
 
-## UC-02 - Sustained under-voltage
+1. Trạm khởi tạo với đầu ra tải bị vô hiệu hóa.
+2. Các phép đo ban đầu được kiểm tra.
+3. Trạm kích hoạt đầu ra tải.
+4. Trạm đo định kỳ `Vin`, `Vload` và `Iload`.
+5. Giao diện người dùng hiển thị các phép đo và trạng thái `NORMAL`.
 
-**Trigger:** `Vin` remains below the UVP threshold for the configured confirmation interval.
+**Điều kiện thành công:** Tải tiếp tục được cấp nguồn và các phép đo nằm trong giới hạn sai số quy định.
 
-1. The station detects the condition using filtered measurements.
-2. The station commands the load switch off.
-3. The state becomes `TRIPPED_UVP`.
-4. The UI and UART identify UVP as the cause.
-5. Restoring voltage alone does not reconnect the load.
+## UC-02 - Thấp áp kéo dài
 
-## UC-03 - Sustained over-voltage
+**Điều kiện kích hoạt:** `Vin` duy trì dưới ngưỡng UVP trong khoảng thời gian xác nhận đã cấu hình.
 
-Same general flow as UC-02, with the OVP threshold and `TRIPPED_OVP` cause.
+1. Trạm phát hiện điều kiện bằng các phép đo đã lọc.
+2. Trạm ra lệnh tắt công tắc tải.
+3. Trạng thái chuyển thành `TRIPPED_UVP`.
+4. Giao diện người dùng và UART xác định UVP là nguyên nhân.
+5. Chỉ khôi phục điện áp không làm tải được kết nối lại.
 
-## UC-04 - Over-current warning and trip
+## UC-03 - Quá áp kéo dài
 
-1. A sustained current above the warning threshold causes `WARNING_OCP`.
-2. The station continues monitoring.
-3. If current reaches the OCP trip threshold, the station commands disconnection.
-4. The state becomes `TRIPPED_OCP` and remains latched.
+Luồng tổng quát giống UC-02, nhưng sử dụng ngưỡng OVP và nguyên nhân `TRIPPED_OVP`.
 
-The fast hardware path remains responsible for limiting a hard short that develops faster than firmware can safely handle.
+## UC-04 - Cảnh báo và trip quá dòng
 
-## UC-05 - Manual recovery
+1. Dòng điện duy trì trên ngưỡng cảnh báo gây ra trạng thái `WARNING_OCP`.
+2. Trạm tiếp tục giám sát.
+3. Nếu dòng điện đạt ngưỡng trip OCP, trạm ra lệnh ngắt.
+4. Trạng thái chuyển thành `TRIPPED_OCP` và tiếp tục được giữ chốt.
 
-**Precondition:** A trip is latched.
+Đường phần cứng nhanh vẫn chịu trách nhiệm giới hạn ngắn mạch cứng diễn ra nhanh hơn khả năng xử lý an toàn của firmware.
 
-1. The operator removes the cause of the fault.
-2. The station observes normal values for the fault-clear dwell interval.
-3. The operator intentionally requests reset.
-4. The station clears the latch, rechecks measurements and reconnects the load only if safe.
+## UC-05 - Khôi phục thủ công
 
-**Alternate flow:** A reset request while the fault remains present is rejected and the load stays disconnected.
+**Điều kiện tiên quyết:** Một trạng thái trip đang được giữ chốt.
 
-## UC-06 - Development diagnostics
+1. Người vận hành loại bỏ nguyên nhân gây lỗi.
+2. Trạm quan sát các giá trị bình thường trong khoảng thời gian duy trì trạng thái hết lỗi.
+3. Người vận hành chủ ý yêu cầu reset.
+4. Trạm xóa chốt, kiểm tra lại các phép đo và chỉ kết nối lại tải nếu an toàn.
 
-The developer connects UART and observes measurement samples, state transitions and trip cause while running a documented test case. UART is supporting evidence; it does not replace an external timing measurement for protection-response claims.
+**Luồng thay thế:** Yêu cầu reset khi lỗi vẫn tồn tại bị từ chối và tải tiếp tục bị ngắt.
+
+## UC-06 - Chẩn đoán trong quá trình phát triển
+
+Nhà phát triển kết nối UART và quan sát các mẫu đo, chuyển trạng thái và nguyên nhân trip trong khi chạy một ca kiểm thử đã được lập tài liệu. UART là bằng chứng hỗ trợ; nó không thay thế phép đo thời gian bên ngoài cho các tuyên bố về đáp ứng bảo vệ.

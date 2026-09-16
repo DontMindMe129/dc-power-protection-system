@@ -1,3 +1,3 @@
-# Report
+# Báo cáo
 
-Placeholder for report source and approved exports.
+Khung chờ cho tệp nguồn báo cáo và các bản xuất đã được phê duyệt.
