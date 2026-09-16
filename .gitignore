@@ -1,0 +1,31 @@
+# Build outputs
+build/
+cmake-build-*/
+*.o
+*.d
+*.elf
+*.map
+*.bin
+*.hex
+
+# IDE and operating-system files
+.vscode/*.log
+.idea/
+*.swp
+*~
+Thumbs.db
+.DS_Store
+
+# EDA backups and transient files
+*-backups/
+*.lck
+*.lock
+*.tmp
+*.bak
+
+# Simulation transient outputs
+*.raw
+*.log
+*.op.raw
+
+# Keep curated verification evidence under verification/results/
