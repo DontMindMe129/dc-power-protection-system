@@ -9,5 +9,6 @@ Nhánh này được chủ ý giữ tối giản. Chưa có kiến trúc, linh k
 Tài liệu đang hoạt động:
 
 - [`docs/concept.md`](docs/concept.md): phạm vi và cách hiểu hiện tại của dự án.
+- [`docs/development-process.md`](docs/development-process.md): quy trình phát triển và điều kiện chuyển giai đoạn theo môn học.
 
 Phiên bản tài liệu được sinh trước đây vẫn được bảo tồn trên nhánh `main` và tag `archive/generated-v1`; chỉ dùng làm nguồn tham khảo, không phải thiết kế đã được chấp thuận.

@@ -59,7 +59,13 @@ Thiết bị không được giả định rằng nguồn bên ngoài sẽ luôn
 
 USB Type-C đã được cân nhắc nhưng chưa được chọn. Nếu sử dụng Type-C để nhận điện áp cao hơn mức USB mặc định, thiết kế phải có cơ chế thương lượng nguồn phù hợp. Jack DC hoặc terminal là các phương án đơn giản hơn cho nguyên mẫu.
 
-## 6. Các tình trạng cần quan sát — Sơ bộ
+## 6. Tải mục tiêu của V1 — Đã xác nhận
+
+V1 hướng tới tải DC có tính chất chủ yếu là điện trở hoặc tải điện tử, hoạt động trong miền điện áp và dòng điện được PCB hỗ trợ. Việc kiểm thử sử dụng điện trở công suất hoặc tải điện tử để tạo các điểm làm việc có kiểm soát và lặp lại được.
+
+V1 chưa hỗ trợ tải cảm, động cơ, solenoid, sạc pin hoặc tải có dòng khởi động lớn. Các loại tải này cần những cơ chế xử lý riêng và có thể được xem xét trong phiên bản sau.
+
+## 7. Các tình trạng cần quan sát — Sơ bộ
 
 Các nhóm sự kiện đang được xem xét gồm:
 
@@ -72,7 +78,7 @@ Các nhóm sự kiện đang được xem xét gồm:
 
 Bảo vệ trước dòng có khả năng phá hủy phải có đường tác động phần cứng và không được phụ thuộc hoàn toàn vào firmware.
 
-## 7. Cấu hình — Đã xác nhận ở mức khái niệm
+## 8. Cấu hình — Đã xác nhận ở mức khái niệm
 
 Một cấu hình nguồn/tải có thể chứa:
 
@@ -86,26 +92,25 @@ Thời gian xác nhận quá dòng
 
 Mọi cấu hình phải nằm trong giới hạn tuyệt đối của PCB. Ngưỡng dòng cho phép phải không lớn hơn giới hạn an toàn của nguồn, tải và bản thân bo mạch.
 
-## 8. Những điều chưa xác định
+## 9. Những điều chưa xác định
 
 Các câu hỏi sau phải được giải quyết trước khi chuyển sang yêu cầu chi tiết:
 
-1. Loại tải mục tiêu của phiên bản đầu tiên là gì?
-2. Có hỗ trợ tải cảm, động cơ hoặc tải có dòng khởi động lớn không?
-3. Miền điện áp đầu vào và dòng liên tục của PCB là bao nhiêu?
-4. Đầu nối nguồn và tải sử dụng loại nào?
-5. Những lỗi nào chỉ cảnh báo và những lỗi nào phải ngắt tải?
-6. Sau khi trip, tải tự phục hồi hay yêu cầu reset thủ công?
-7. Trạng thái mặc định của tải khi vừa cấp nguồn hoặc khi MCU reset là gì?
-8. Người dùng cần xem và cấu hình những thông tin nào?
-9. Môn học quy định gì về kích thước PCB, số lớp, linh kiện và thiết bị kiểm thử?
+1. Miền điện áp đầu vào và dòng liên tục của PCB là bao nhiêu?
+2. Đầu nối nguồn và tải sử dụng loại nào?
+3. Những lỗi nào chỉ cảnh báo và những lỗi nào phải ngắt tải?
+4. Sau khi trip, tải tự phục hồi hay yêu cầu reset thủ công?
+5. Trạng thái mặc định của tải khi vừa cấp nguồn hoặc khi MCU reset là gì?
+6. Người dùng cần xem và cấu hình những thông tin nào?
+7. Môn học quy định gì về kích thước PCB, số lớp, linh kiện và thiết bị kiểm thử?
 
-## 9. Chưa thuộc phạm vi đã phê duyệt
+## 10. Chưa thuộc phạm vi đã phê duyệt
 
 Các hạng mục sau chưa được đưa vào phiên bản đầu tiên:
 
 - USB Power Delivery/PPS tích hợp trên PCB;
 - tự động nhận diện khả năng cấp dòng tối đa của nguồn;
+- tải cảm, động cơ, solenoid và tải có dòng khởi động lớn;
 - Bluetooth, Wi-Fi hoặc ứng dụng điện thoại;
 - sạc pin;
 - làm việc trực tiếp với điện lưới;
