@@ -1,192 +1,96 @@
 # Concept hệ thống giám sát và bảo vệ đường nguồn DC
 
-> Trạng thái: bản cơ sở của Giai đoạn 1. Các giá trị ghi **Tạm thời** vẫn phải được xác nhận bằng tính toán, thiết kế và thử nghiệm.
+> Trạng thái: bản tóm tắt Giai đoạn 1. Tài liệu này chỉ mô tả hệ thống ở mức ý tưởng; các yêu cầu chi tiết nằm trong [`product-requirements.md`](product-requirements.md).
 
-## 1. Vấn đề
+## 1. Mục tiêu
 
-Khi một tải DC được nối trực tiếp với nguồn bên ngoài, người dùng không có đủ thông tin về điện áp thực tế tại hai phía, dòng điện đang chạy hoặc nguyên nhân khiến tải hoạt động bất thường. Dự án bổ sung một thiết bị trung gian để quan sát đường công suất, cung cấp thông tin cho người dùng và ngắt tải khi phát hiện điều kiện không an toàn.
+Dự án xây dựng một thiết bị đặt giữa nguồn DC và tải DC để:
 
-## 2. Ranh giới hệ thống — Đã xác nhận
+- truyền năng lượng từ nguồn tới tải;
+- đo trạng thái điện của đường công suất;
+- cung cấp thông tin cho người dùng;
+- ngắt tải khi phát hiện điều kiện không an toàn.
 
-Nguồn và tải đều nằm ngoài phạm vi thiết kế. Chỉ điện áp DC thấp đi vào thiết bị; việc biến đổi điện lưới 220 V AC thành DC thuộc về adapter bên ngoài.
+Thiết bị không tạo ra một mức điện áp mới và không thay thế chức năng của bộ nguồn.
 
-```text
-Nguồn DC ngoài
-      │
-      ▼
-┌────────────────────────────────────────────┐
-│ Hệ thống giám sát và bảo vệ đường nguồn DC │
-└────────────────────────────────────────────┘
-      │
-      ▼
-Tải DC ngoài
-```
+## 2. Ranh giới hệ thống
 
-Sản phẩm cuối của dự án phải được triển khai trên PCB, lắp ráp và kiểm thử thực tế. Breadboard hoặc module chỉ được dùng để thử nghiệm từng khối trước khi chốt PCB.
-
-## 3. Đầu vào, đầu ra và các luồng của hệ thống — Đã xác nhận
-
-### 3.1. Luồng công suất
-
-- Đầu vào công suất là năng lượng do nguồn DC bên ngoài cung cấp.
-- Đầu ra công suất là năng lượng DC được truyền tới tải dưới sự giám sát và có khả năng đóng hoặc ngắt.
-- Tải vật lý nằm ở phía đầu ra công suất. Hành vi của tải ảnh hưởng tới điện áp và dòng điện mà hệ thống quan sát được.
+Nguồn và tải đều nằm ngoài phạm vi thiết kế. Thiết bị chỉ làm việc với điện áp DC thấp; việc chuyển đổi từ điện lưới AC sang DC thuộc về adapter bên ngoài.
 
 ```text
-Nguồn DC ──> [ giám sát + quyết định + đóng/ngắt ] ──> Tải DC
+Nguồn DC ngoài ──> [ hệ thống giám sát và bảo vệ ] ──> Tải DC ngoài
 ```
 
-### 3.2. Luồng thông tin
+Sản phẩm cuối phải được triển khai trên PCB và kiểm thử thực tế. Breadboard hoặc module chỉ dùng để thử từng khối trong quá trình phát triển.
 
-- Đầu vào thông tin gồm lệnh vận hành, cấu hình nguồn và profile tải do người dùng chọn.
-- Đầu ra thông tin gồm giá trị đo, trạng thái vận hành, cảnh báo và nguyên nhân ngắt.
-- Profile tải là dữ liệu mô tả miền hành vi được chấp nhận; profile không phải tải vật lý và V1 không tự nhận diện loại tải.
+## 3. Đầu vào và đầu ra
 
-## 4. Mô hình đường công suất — Đã xác nhận
+Hệ thống có hai loại luồng:
 
-Thiết bị hoạt động theo kiểu truyền thẳng, không điều chỉnh điện áp đầu ra:
+- **Công suất:** nhận năng lượng từ nguồn DC và truyền tới tải qua đường công suất có khả năng đóng/ngắt.
+- **Thông tin:** nhận lệnh và cấu hình vận hành; trả về giá trị đo, trạng thái và cảnh báo.
+
+Tải vật lý không phải một phần của hệ thống. Cấu hình tải chỉ mô tả miền hành vi được phép để hệ thống lựa chọn cách giám sát và bảo vệ phù hợp.
+
+## 4. Đại lượng cần đo
+
+- `Vin`: điện áp tại đầu vào của thiết bị.
+- `Vload`: điện áp tại đầu ra, phía tải.
+- `Iload`: dòng đi trên đường công suất từ nguồn tới tải, không bao gồm dòng tự tiêu thụ của thiết bị.
+- `Vdrop = Vin − Vload`: độ sụt áp qua thiết bị khi công tắc công suất đang bật.
+
+Không thể kết luận lỗi chỉ từ một đại lượng. Ví dụ, `Vload` thấp có thể do quá tải, nguồn bị sụt áp hoặc công tắc đã tắt. Hệ thống phải xét đồng thời các giá trị đo, trạng thái công tắc và cấu hình đang dùng.
+
+## 5. Nguyên lý hoạt động
+
+Thiết bị truyền thẳng điện áp thay vì điều chỉnh điện áp đầu ra:
 
 ```text
-Switch bật:  Vload ≈ Vin − Vdrop
-Switch tắt:  thiết bị không chủ động truyền năng lượng từ nguồn đến tải
+Công tắc bật:  Vload ≈ Vin − Vdrop
+Công tắc tắt:  thiết bị không chủ động truyền năng lượng tới tải
 ```
 
-Tải phải tương thích với nguồn đang kết nối. Thay đổi cấu hình không biến đổi điện áp; cấu hình chỉ xác định miền hoạt động và cách xử lý lỗi.
+Tải phải tương thích với nguồn đang kết nối. Cấu hình vận hành không biến đổi điện áp; nó chỉ xác định miền bình thường, miền cảnh báo và điều kiện ngắt.
 
-Trạng thái switch tắt không bảo đảm `Vload = 0 V` ngay lập tức vì tải có thể còn điện tích, dòng rò hoặc nguồn cấp ngược.
+Khối điều khiển, đo lường và giao diện lấy nguồn từ `Vin` qua một nhánh được bảo vệ và điều chỉnh riêng, đặt trước công tắc tải. Vì vậy, hệ thống có thể tiếp tục báo trạng thái sau khi đã ngắt tải nếu `Vin` vẫn còn hợp lệ.
 
-## 5. Đại lượng giám sát — Đã xác nhận
+## 6. Nguyên tắc bảo vệ
 
-Thiết bị cần đo:
+- Firmware giám sát các giá trị đo, xử lý điều kiện có thời gian và cung cấp thông tin cho người dùng.
+- Sự cố quá dòng có khả năng gây hư hỏng phải có đường bảo vệ phần cứng, không phụ thuộc hoàn toàn vào firmware.
+- Khi MCU mất nguồn, reset hoặc chưa điều khiển hợp lệ, công tắc tải phải mặc định ở trạng thái OFF.
+- Hệ thống không giả định nguồn bên ngoài sẽ luôn tự bảo vệ khi quá tải hoặc ngắn mạch.
 
-- `Vin`: điện áp ở phía đầu vào thiết bị;
-- `Vload`: điện áp tại phía tải;
-- `Iload`: dòng điện được truyền từ nguồn tới tải, không bao gồm dòng tự tiêu thụ của hệ thống;
-- `Vdrop = Vin − Vload`: độ sụt áp qua đường công suất khi switch đang bật.
+## 7. Phạm vi ban đầu
 
-`Vload` thấp không tự nó chứng minh tải bị ngắn mạch vì hiện tượng này cũng xuất hiện khi switch đã tắt hoặc nguồn bên ngoài bị sụt áp. Việc phân loại sự kiện phải xét đồng thời các phép đo, trạng thái switch và cấu hình đang dùng.
-
-## 6. Miền vận hành, cấu hình và giới hạn phần cứng
-
-Ba lớp giới hạn phải được phân biệt:
-
-1. **Miền vận hành định mức của sản phẩm:** miền mà sản phẩm cam kết hoạt động đúng.
-2. **Giới hạn của cấu hình nguồn và tải:** do người dùng chọn và luôn phải nằm trong miền vận hành định mức.
-3. **Giới hạn tuyệt đối của phần cứng:** giới hạn chịu đựng của linh kiện và PCB; không phải miền sử dụng được công bố.
-
-### 6.1. Miền vận hành định mức hiện tại
-
-| Thông số | Giá trị hiện tại | Trạng thái |
+| Nội dung | Baseline hiện tại | Trạng thái |
 | --- | --- | --- |
 | Điện áp hoạt động | `5–15 V DC` | Đã xác nhận |
-| Dòng tải liên tục định mức | `0–1 A` | Tạm thời |
-| Dòng đỉnh vận hành định mức | Trên `1 A` đến `2 A` | Tạm thời |
-| Thời gian liên tục tối đa trong miền dòng đỉnh | `1 s` | Tạm thời |
+| Dòng tải liên tục | đến `1 A` | Tạm thời |
+| Dòng tải ngắn hạn | đến `2 A` trong tối đa `1 s` | Tạm thời |
+| Sản phẩm cuối | PCB lắp ráp và kiểm thử được | Đã xác nhận |
 
-`2 A/1 s` là biên trên của miền sử dụng được công bố và là điều kiện tối thiểu mà thiết kế phải đáp ứng. Nó không phải dòng hoặc thời gian phá hủy tuyệt đối của phần cứng.
+Các tải đại diện ban đầu gồm tải thuần trở, tải điện tử có tụ đầu vào và quạt DC nhỏ. Điện trở công suất hoặc tải điện tử được dùng để tạo điều kiện kiểm thử có kiểm soát; quạt giúp quan sát dòng khởi động và biến động dòng trong vận hành.
 
-### 6.2. Cấu hình nguồn và tải
+Động cơ DC hoặc servo chỉ được xem là phép thử mở rộng nếu nằm trong giới hạn của phần cứng. Phiên bản đầu không tự nhận dạng loại tải và không cam kết hỗ trợ mọi tải DC.
 
-Cấu hình nguồn và profile tải là hai nhóm thông tin riêng:
+## 8. Ngoài phạm vi ban đầu
 
-```text
-Cấu hình nguồn:
-Vin_expected_min
-Vin_expected_max
-I_supply_max
-
-Profile tải:
-I_warning
-I_continuous_limit
-I_startup_peak
-Startup_duration
-I_trip
-Trip_delay
-Reset_mode
-```
-
-Giới hạn áp dụng thực tế không được lớn hơn giá trị nhỏ nhất giữa giới hạn sản phẩm, giới hạn nguồn và giới hạn profile tải.
-
-Khả năng cấp dòng tối đa của nguồn, `I_supply_max`, là thông tin cấu hình; hệ thống không thể suy ra giá trị này một cách đáng tin cậy chỉ từ `Vin` và `Iload`. Thiết bị cũng không được giả định nguồn bên ngoài sẽ luôn tự bảo vệ khi ngắn mạch.
-
-### 6.3. Giới hạn tuyệt đối
-
-Điện áp chịu đựng tuyệt đối, ngưỡng bảo vệ nhanh, dòng sự cố và giới hạn năng lượng/nhiệt của phần cứng hiện là TBD. Các giá trị này sẽ được xác định trong Hardware Specification và phải có dự phòng so với miền vận hành định mức.
-
-## 7. Nguồn nuôi nội bộ và trạng thái fail-safe — Đã xác nhận
-
-Hệ thống tự cấp nguồn cho khối điều khiển, đo lường và giao diện từ `Vin`. Nguồn đầu vào được chia thành:
-
-```text
-                         ┌─ bảo vệ đầu vào + nguồn nội bộ ──> MCU, đo lường, UI
-Vin ── bảo vệ đầu vào ───┤
-                         └─ đo dòng + công tắc công suất ───> Vload
-```
-
-Nhánh nguồn điều khiển được lấy trước công tắc tải, có bảo vệ và điều chỉnh điện áp riêng. Hệ thống không yêu cầu nguồn phụ trong vận hành bình thường.
-
-Khi `Vin` còn hợp lệ nhưng tải bị ngắt, khối điều khiển và giao diện phải tiếp tục hoạt động. Khi nguồn điều khiển mất hoặc không ổn định, công tắc tải phải trở về trạng thái mặc định OFF bằng hành vi fail-safe của phần cứng.
-
-Hệ thống không cam kết tiếp tục hiển thị hoặc ghi nhận sự kiện khi nguồn đầu vào đã mất hoàn toàn.
-
-## 8. Phạm vi tải và profile V1 — Đã xác nhận
-
-Tên sản phẩm không chứa từ “cấu hình”, nhưng khả năng sử dụng cấu hình nguồn và profile tải vẫn là chức năng của V1. Các profile ban đầu gồm:
-
-| Profile | Nhóm tải đại diện | Đặc điểm chính |
-| --- | --- | --- |
-| `RESISTIVE` | Điện trở công suất | Dòng ổn định, gần như không có dòng khởi động |
-| `ELECTRONIC` | LED hoặc bo điện tử có tụ đầu vào | Có thể xuất hiện dòng nạp tụ ngắn khi vừa bật |
-| `FAN` | Quạt DC nhỏ | Có dòng khởi động và có thể xuất hiện xung dòng khi đang chạy |
-| `CUSTOM` | Tải do người dùng khai báo | Các ngưỡng được nhập trong miền vận hành của sản phẩm |
-
-Người dùng chủ động chọn profile; V1 không tự nhận diện loại tải. Điện trở công suất hoặc tải điện tử được dùng để tạo các điểm kiểm thử có kiểm soát và lặp lại được.
-
-Động cơ DC chổi than hoặc servo có thể được dùng làm phép thử mở rộng nếu điện áp, dòng khởi động và hành vi năng lượng nằm trong miền phần cứng, nhưng V1 chưa cam kết hỗ trợ chung cho các tải đó.
-
-## 9. Các tình trạng cần quan sát
-
-Các nhóm sự kiện cần được xem xét gồm:
-
-- `Vin` nằm ngoài miền hợp lệ của cấu hình nguồn;
-- `Vdrop` quá lớn khi switch đang bật;
-- `Iload` vượt ngưỡng trong một khoảng thời gian;
-- dòng tăng rất nhanh do quá tải nặng hoặc ngắn mạch;
-- nguồn bên ngoài sụt áp, giới hạn dòng, tự ngắt hoặc khởi động lại theo chu kỳ;
-- điện áp đầu ra không phù hợp với trạng thái switch mong đợi;
-- MCU mất nguồn hoặc reset trong khi đang xảy ra lỗi.
-
-Bảo vệ trước dòng có khả năng phá hủy phải có đường tác động phần cứng và không được phụ thuộc hoàn toàn vào firmware. Khi MCU mất nguồn hoặc reset, đường công suất phải mặc định OFF.
-
-## 10. Những điều chưa xác định
-
-Các quyết định sau vẫn còn mở:
-
-1. Giá trị cuối cùng của dòng liên tục `1 A`, dòng đỉnh `2 A` và giới hạn `1 s` sau khi tính toán nhiệt và chọn linh kiện.
-2. Ngưỡng tác động, dung sai và hành vi latch của bảo vệ quá dòng nhanh.
-3. Ngưỡng cảnh báo, ngưỡng ngắt và thời gian cho phép cụ thể của từng profile.
-4. Profile nào bắt buộc phải được trình diễn trong V1.
-5. Đầu nối nguồn và tải sử dụng loại nào.
-6. Những lỗi nào chỉ cảnh báo và những lỗi nào phải ngắt tải.
-7. Cơ chế phục hồi sau trip và giới hạn số lần tự thử lại, nếu có.
-8. Loại giao diện và các trường cấu hình mà người dùng có thể thay đổi.
-9. Miền đo mở rộng phía trên `15 V` để phát hiện quá áp và giới hạn điện áp chịu đựng tuyệt đối.
-10. Điều kiện nhiệt độ, độ ẩm và tần suất dòng đỉnh lặp lại.
-11. Các ràng buộc còn lại của môn học về số lớp PCB, linh kiện và thiết bị kiểm thử.
-
-## 11. Chưa thuộc phạm vi V1
-
-Các hạng mục sau chưa được đưa vào phiên bản đầu tiên:
-
-- USB Power Delivery/PPS tích hợp trên PCB;
-- tự động nhận diện khả năng cấp dòng tối đa của nguồn;
-- tự động nhận diện loại tải;
-- nguồn điều khiển phụ hoặc pin dự phòng;
-- tải cảm mạnh, solenoid và tải có khả năng trả năng lượng lớn về đường nguồn;
-- cam kết hỗ trợ chung cho mọi động cơ DC hoặc servo;
-- Bluetooth, Wi-Fi hoặc ứng dụng điện thoại;
+- làm việc trực tiếp với điện lưới AC;
+- tích hợp USB Power Delivery/PPS trên PCB;
+- tự nhận dạng nguồn hoặc loại tải;
 - sạc pin;
-- làm việc trực tiếp với điện lưới;
-- tuyên bố hoạt động với mọi nguồn và mọi loại tải DC.
+- nguồn điều khiển dự phòng;
+- kết nối Bluetooth, Wi-Fi hoặc ứng dụng điện thoại;
+- cam kết hỗ trợ tải cảm mạnh hoặc tải có khả năng trả năng lượng lớn về nguồn.
 
-USB Type-C mới chỉ được cân nhắc như một loại đầu nối. Nếu dùng Type-C để nhận điện áp cao hơn mức USB mặc định, thiết kế phải có cơ chế thương lượng nguồn phù hợp; jack DC hoặc terminal vẫn là các phương án đơn giản hơn cho prototype.
+## 9. Những điểm còn mở
+
+- giá trị cuối cùng của giới hạn dòng và thời gian chịu dòng ngắn hạn;
+- ngưỡng và kiến trúc của bảo vệ quá dòng nhanh;
+- điều kiện cảnh báo, ngắt và phục hồi sau lỗi;
+- cấu hình tải bắt buộc trong phiên bản đầu;
+- giao diện người dùng và loại đầu nối;
+- giới hạn nhiệt, điện áp tuyệt đối và thiết bị kiểm thử sẵn có.
+
+Các điểm này sẽ được giải quyết dần bằng tính toán, lựa chọn kiến trúc và thử nghiệm; chúng chưa được xem là thiết kế đã phê duyệt.
