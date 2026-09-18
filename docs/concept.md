@@ -1,6 +1,6 @@
 # Concept hệ thống giám sát và bảo vệ đường nguồn DC
 
-> Trạng thái: bản cơ sở của Giai đoạn 1. Các giá trị ghi **Tạm thời** vẫn phải được xác nhận bằng tính toán, thiết kế và thử nghiệm.
+> Trạng thái: bản cơ sở của Giai đoạn 1. Các giá trị ghi **Tạm thời** vẫn phải được xác nhận bằng tính toán, thiết kế và thử nghiệm. Nguồn truy vết trạng thái là [`decision-log.md`](decision-log.md).
 
 ## 1. Vấn đề
 
@@ -66,6 +66,8 @@ Thiết bị cần đo:
 
 `Vload` thấp không tự nó chứng minh tải bị ngắn mạch vì hiện tượng này cũng xuất hiện khi switch đã tắt hoặc nguồn bên ngoài bị sụt áp. Việc phân loại sự kiện phải xét đồng thời các phép đo, trạng thái switch và cấu hình đang dùng.
 
+`Vdrop` chỉ có ý nghĩa chẩn đoán chất lượng đường công suất khi switch đang ON và `Iload` đủ lớn để sụt áp dự kiến vượt đáng kể sai số kết hợp của hai kênh điện áp. Khi dòng gần 0, hiệu `Vin − Vload` có thể chủ yếu phản ánh sai lệch giữa hai kênh đo.
+
 ## 6. Miền vận hành, cấu hình và giới hạn phần cứng
 
 Ba lớp giới hạn phải được phân biệt:
@@ -129,20 +131,42 @@ Khi `Vin` còn hợp lệ nhưng tải bị ngắt, khối điều khiển và g
 
 Hệ thống không cam kết tiếp tục hiển thị hoặc ghi nhận sự kiện khi nguồn đầu vào đã mất hoàn toàn.
 
-## 8. Phạm vi tải và profile V1 — Đã xác nhận
+## 8. Phạm vi tải và profile V1
 
-Tên sản phẩm không chứa từ “cấu hình”, nhưng khả năng sử dụng cấu hình nguồn và profile tải vẫn là chức năng của V1. Các profile ban đầu gồm:
+Tên sản phẩm không chứa từ “cấu hình”, nhưng việc hệ thống sử dụng profile do người dùng chọn là chức năng **Đã xác nhận**. Danh sách profile có trạng thái riêng:
 
-| Profile | Nhóm tải đại diện | Đặc điểm chính |
-| --- | --- | --- |
-| `RESISTIVE` | Điện trở công suất | Dòng ổn định, gần như không có dòng khởi động |
-| `ELECTRONIC` | LED hoặc bo điện tử có tụ đầu vào | Có thể xuất hiện dòng nạp tụ ngắn khi vừa bật |
-| `FAN` | Quạt DC nhỏ | Có dòng khởi động và có thể xuất hiện xung dòng khi đang chạy |
-| `CUSTOM` | Tải do người dùng khai báo | Các ngưỡng được nhập trong miền vận hành của sản phẩm |
+| Profile | Nhóm tải đại diện | Đặc điểm chính | Trạng thái |
+| --- | --- | --- | --- |
+| `RESISTIVE` | Điện trở công suất | Dòng ổn định, gần như không có dòng khởi động | Tạm thời |
+| `ELECTRONIC` | Tải điện tử/RC có tụ đầu vào | Có thể xuất hiện dòng nạp tụ ngắn khi vừa bật | Tạm thời |
+| `FAN` | Quạt DC nhỏ | Có dòng khởi động và có thể xuất hiện xung dòng khi đang chạy | Tạm thời |
+| `CUSTOM` | Tải do người dùng khai báo | Các ngưỡng được nhập trong miền vận hành của sản phẩm | Đề xuất chưa duyệt |
 
 Người dùng chủ động chọn profile; V1 không tự nhận diện loại tải. Điện trở công suất hoặc tải điện tử được dùng để tạo các điểm kiểm thử có kiểm soát và lặp lại được.
 
 Động cơ DC chổi than hoặc servo có thể được dùng làm phép thử mở rộng nếu điện áp, dòng khởi động và hành vi năng lượng nằm trong miền phần cứng, nhưng V1 chưa cam kết hỗ trợ chung cho các tải đó.
+
+### 8.1. Mô hình tải điện tử/RC
+
+Trong một mô hình tải có nhánh điện trở và tụ đầu vào, dòng mà hệ thống truyền tới tải trong giai đoạn nạp có thể được mô tả:
+
+```text
+Iload = IR + IC
+```
+
+Khi switch OFF, dòng xả của tụ có thể chủ yếu tuần hoàn bên trong tải nên cảm biến trên đường truyền nguồn–tải có thể đọc `Iload ≈ 0` trong khi `Vload` vẫn khác 0. Vì vậy `Vload` là đại lượng phù hợp hơn để quan sát điện áp hoặc năng lượng còn lại phía tải sau khi ngắt.
+
+Điện dung tải tối đa, giới hạn inrush và việc dùng soft-start/current-limit vẫn là TBD.
+
+### 8.2. Mô hình quạt DC
+
+Đối với quạt, cần phân biệt:
+
+- dòng khởi động sau khi đóng switch;
+- xung dòng ngắn xuất hiện trong runtime rồi trở về bình thường;
+- dòng cao kéo dài do tải cơ lớn, kẹt rotor hoặc tình trạng bất thường khác.
+
+Dòng khởi động và xung runtime có thể cùng chịu trần dòng đỉnh của sản phẩm nhưng thời gian cho phép không nhất thiết giống nhau. Các thời gian cụ thể thuộc profile và hiện là TBD.
 
 ## 9. Các tình trạng cần quan sát
 
@@ -173,6 +197,12 @@ Các quyết định sau vẫn còn mở:
 9. Miền đo mở rộng phía trên `15 V` để phát hiện quá áp và giới hạn điện áp chịu đựng tuyệt đối.
 10. Điều kiện nhiệt độ, độ ẩm và tần suất dòng đỉnh lặp lại.
 11. Các ràng buộc còn lại của môn học về số lớp PCB, linh kiện và thiết bị kiểm thử.
+12. Đảo cực đầu vào phải được bảo vệ, chỉ cảnh báo hay nằm ngoài phạm vi.
+13. Cách xử lý cảm biến/ADC mất tín hiệu hoặc trả giá trị phi lý.
+14. Phạm vi phát hiện và xử lý backfeed từ tải.
+15. Khả năng phát hiện switch bị chập và vẫn dẫn khi được yêu cầu OFF.
+16. Quy tắc thermal derating và giới hạn lặp lại của các xung dòng đỉnh.
+17. `CUSTOM` có trở thành profile bắt buộc của V1 hay không.
 
 ## 11. Chưa thuộc phạm vi V1
 

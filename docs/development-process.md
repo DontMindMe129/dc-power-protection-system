@@ -16,7 +16,7 @@
 | Giai đoạn | Công việc chính | Đầu ra trong repo | Điều kiện chuyển bước |
 | --- | --- | --- | --- |
 | 0. Bảo tồn và khởi động lại | Lưu phiên bản cũ và tạo nhánh làm lại | `main`, tag `archive/generated-v1`, nhánh rebuild | Phiên bản cũ có thể khôi phục; nhánh mới sạch và độc lập |
-| 1. Xác định sản phẩm | Làm rõ vấn đề, ranh giới, nguồn, tải, I/O, chức năng, use case và ràng buộc | `concept.md`, sau đó là `product-requirements.md` và `project-plan.md` | Phạm vi nhất quán, khả thi và người thực hiện giải thích được toàn bộ concept |
+| 1. Xác định sản phẩm | Làm rõ vấn đề, ranh giới, nguồn, tải, I/O, chức năng, use case và ràng buộc | `concept.md`, `product-requirements.md`, `decision-log.md`, `project-plan.md` | Phạm vi nhất quán, các trạng thái truy vết được, rủi ro/TBD được nhận diện và người thực hiện giải thích được toàn bộ concept |
 | 2. Đặc tả thiết kế | Kiến trúc hệ thống, sơ đồ khối, hành vi, luồng công suất/tín hiệu, trạng thái và phân chia HW/SW | `design-specification.md` | Mọi khối có trách nhiệm và giao diện rõ; kiến trúc đáp ứng yêu cầu sản phẩm |
 | 3. Đặc tả thành phần | Định nghĩa chi tiết phần cứng, phần mềm và cách kiểm thử | `hardware-specification.md`, `software-specification.md`, `test-specification.md` | Các đặc tả thống nhất về giao diện và mọi yêu cầu chính có phương pháp kiểm chứng |
 | 4. Thiết kế và triển khai | Tính toán, chọn linh kiện, mô phỏng, schematic, PCB và phát triển firmware | `hardware/`, `firmware/` | Thiết kế được rà soát; mô phỏng đạt; tệp PCB sẵn sàng sản xuất; firmware lõi có thể kiểm tra |
@@ -46,4 +46,4 @@ Năm nhóm tài liệu của System Specification được ánh xạ vào repo n
 
 ## 5. Trạng thái hiện tại
 
-Dự án đang ở Giai đoạn 1. `concept.md` và bản cơ sở `product-requirements.md` đang được phát triển. Các thông số tạm thời và vấn đề còn mở trong yêu cầu sản phẩm phải tiếp tục được kiểm tra trước khi chốt kiến trúc và chuyển sang các đặc tả thành phần.
+Dự án đang ở Giai đoạn 1. Concept, Product Requirement v0.2, decision log và project plan bản đầu đã có, nhưng Giai đoạn 1 chưa hoàn tất. Các fault chưa phân loại, khả năng tiếp cận thiết bị kiểm thử, phân công/lịch học kỳ và các baseline tạm thời phải tiếp tục được xử lý trước khi đóng băng kiến trúc hoặc đặt PCB.
