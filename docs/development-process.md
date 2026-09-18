@@ -46,4 +46,4 @@ Năm nhóm tài liệu của System Specification được ánh xạ vào repo n
 
 ## 5. Trạng thái hiện tại
 
-Dự án đang ở Giai đoạn 1. Chỉ `concept.md` đang được phát triển. Các đặc tả và thư mục triển khai chưa được tạo cho đến khi concept đủ rõ và được chấp thuận.
+Dự án đang ở Giai đoạn 1. `concept.md` và bản cơ sở `product-requirements.md` đang được phát triển. Các thông số tạm thời và vấn đề còn mở trong yêu cầu sản phẩm phải tiếp tục được kiểm tra trước khi chốt kiến trúc và chuyển sang các đặc tả thành phần.
