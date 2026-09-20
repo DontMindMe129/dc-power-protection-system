@@ -28,4 +28,14 @@ Thumbs.db
 *.log
 *.op.raw
 
+# Tài liệu báo cáo và thuyết trình được xuất cục bộ
+*.doc
+*.docx
+*.ppt
+*.pptx
+*.odt
+*.odp
+~$*.doc*
+~$*.ppt*
+
 # Lưu bằng chứng kiểm chứng đã chọn lọc trong verification/results/
