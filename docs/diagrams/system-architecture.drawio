@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" pages="6">
+<mxfile host="app.diagrams.net" pages="7">
   <diagram name="system-context" id="oEWuI_450NYy6-5AGQjG">
     <mxGraphModel dx="2283" dy="777" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -313,7 +313,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="TNs-cI2FnObKl3SrNtzk" name="hardware-overcurrent-protection">
-    <mxGraphModel dx="1713" dy="914" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1456" dy="777" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -323,7 +323,7 @@
         <mxCell id="fbIMt227Iyx3cqfAuATw-3" edge="1" parent="1" source="fbIMt227Iyx3cqfAuATw-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="fbIMt227Iyx3cqfAuATw-5">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="fbIMt227Iyx3cqfAuATw-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Severe-current Dectection" vertex="1">
+        <mxCell id="fbIMt227Iyx3cqfAuATw-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Severe-current Detection" vertex="1">
           <mxGeometry height="60" width="120" x="240" y="360" as="geometry" />
         </mxCell>
         <mxCell id="fbIMt227Iyx3cqfAuATw-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;code dir=&quot;ltr&quot;&gt;&lt;/code&gt;Fault Memory (Fault Priority)" vertex="1">
@@ -501,6 +501,222 @@
         </mxCell>
         <mxCell id="wbgQC-CMlRYyFwfNK43k-14" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Switch_Cmd" vertex="1">
           <mxGeometry height="30" width="60" x="350" y="400" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="DTQy3Eu6Zol5OamtDbJr" name="system-state-diagram">
+    <mxGraphModel dx="3337" dy="2509" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="wq-QDxub1fuudRiTXMVS-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Initializing" vertex="1">
+          <mxGeometry height="60" width="120" x="320" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Ready - Output OFF" vertex="1">
+          <mxGeometry height="60" width="120" x="320" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Running - Output ON" vertex="1">
+          <mxGeometry height="60" width="120" x="320" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Warning - Output ON" vertex="1">
+          <mxGeometry height="60" width="120" x="320" y="840" as="geometry" />
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Fault - Output OFF" vertex="1">
+          <mxGeometry height="60" width="120" x="320" y="1040" as="geometry" />
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-6" edge="1" parent="1" source="wq-QDxub1fuudRiTXMVS-1" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="wq-QDxub1fuudRiTXMVS-2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="400" y="320" as="sourcePoint" />
+            <mxPoint x="450" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-7" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Startup Checks Passed" vertex="1">
+          <mxGeometry height="30" width="90" x="290" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-8" edge="1" parent="1" source="wq-QDxub1fuudRiTXMVS-1" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="wq-QDxub1fuudRiTXMVS-5" value="">
+          <mxGeometry height="50" relative="1" width="50" x="-0.0538" as="geometry">
+            <Array as="points">
+              <mxPoint y="150" />
+              <mxPoint y="1070" />
+            </Array>
+            <mxPoint x="400" y="420" as="sourcePoint" />
+            <mxPoint x="450" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-9" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Startup Checks Failed" vertex="1">
+          <mxGeometry height="30" width="60" x="-60" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Checking Before ON" vertex="1">
+          <mxGeometry height="60" width="120" x="320" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-13" edge="1" parent="1" source="wq-QDxub1fuudRiTXMVS-2" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="wq-QDxub1fuudRiTXMVS-12" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="420" y="490" as="sourcePoint" />
+            <mxPoint x="470" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-14" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="User Requests ON" vertex="1">
+          <mxGeometry height="30" width="60" x="320" y="415" as="geometry" />
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-15" edge="1" parent="1" source="wq-QDxub1fuudRiTXMVS-12" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="wq-QDxub1fuudRiTXMVS-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="400" y="650" as="sourcePoint" />
+            <mxPoint x="450" y="600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-16" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Enable Checks Passed" vertex="1">
+          <mxGeometry height="30" width="60" x="320" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-17" edge="1" parent="1" source="wq-QDxub1fuudRiTXMVS-2" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="wq-QDxub1fuudRiTXMVS-5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="80" y="350" />
+              <mxPoint x="80" y="1070" />
+            </Array>
+            <mxPoint x="370" y="530" as="sourcePoint" />
+            <mxPoint x="420" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-18" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Fault Detected" vertex="1">
+          <mxGeometry height="30" width="60" x="20" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-19" edge="1" parent="1" source="wq-QDxub1fuudRiTXMVS-12" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="wq-QDxub1fuudRiTXMVS-5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="160" y="510" />
+              <mxPoint x="160" y="1070" />
+            </Array>
+            <mxPoint x="200" y="660" as="sourcePoint" />
+            <mxPoint x="250" y="610" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-20" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Enable Checks Failed" vertex="1">
+          <mxGeometry height="30" width="60" x="100" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-21" edge="1" parent="1" source="wq-QDxub1fuudRiTXMVS-3" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="wq-QDxub1fuudRiTXMVS-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="210" y="770" as="sourcePoint" />
+            <mxPoint x="260" y="720" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-22" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Warning Detected" vertex="1">
+          <mxGeometry height="30" width="60" x="320" y="740" as="geometry" />
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-23" edge="1" parent="1" source="wq-QDxub1fuudRiTXMVS-4" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="wq-QDxub1fuudRiTXMVS-5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="180" y="800" as="sourcePoint" />
+            <mxPoint x="230" y="750" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-24" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Shutdown Condition Met&lt;br&gt;&lt;b&gt;OR&lt;/b&gt;&lt;br&gt;&lt;div&gt;Fault Detected&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="140" x="240" y="940" as="geometry" />
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-25" edge="1" parent="1" source="wq-QDxub1fuudRiTXMVS-3" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="wq-QDxub1fuudRiTXMVS-5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="240" y="670" />
+              <mxPoint x="240" y="1070" />
+            </Array>
+            <mxPoint x="290" y="730" as="sourcePoint" />
+            <mxPoint x="340" y="680" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-26" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Fault Detected" vertex="1">
+          <mxGeometry height="30" width="60" x="180" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-28" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Recovery Checks Passed &lt;b&gt;AND&lt;/b&gt;&lt;div&gt;Fault Cleared&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="90" x="650" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-31" edge="1" parent="1" source="wq-QDxub1fuudRiTXMVS-3" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="wq-QDxub1fuudRiTXMVS-2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="520" y="670" />
+              <mxPoint x="520" y="350" />
+            </Array>
+            <mxPoint x="560" y="630" as="sourcePoint" />
+            <mxPoint x="610" y="580" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-32" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="User Requests OFF" vertex="1">
+          <mxGeometry height="30" width="60" x="460" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-33" edge="1" parent="1" source="wq-QDxub1fuudRiTXMVS-4" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;" target="wq-QDxub1fuudRiTXMVS-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="520" y="870" />
+              <mxPoint x="520" y="685" />
+            </Array>
+            <mxPoint x="520" y="720" as="sourcePoint" />
+            <mxPoint x="570" y="670" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wq-QDxub1fuudRiTXMVS-34" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Warning Cleared" vertex="1">
+          <mxGeometry height="30" width="60" x="460" y="770" as="geometry" />
+        </mxCell>
+        <mxCell id="mDRZVATWOAS0x9TDAL-h-1" edge="1" parent="1" source="wq-QDxub1fuudRiTXMVS-4" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="wq-QDxub1fuudRiTXMVS-2" value="">
+          <mxGeometry height="50" relative="1" width="50" x="-0.006" as="geometry">
+            <Array as="points">
+              <mxPoint x="600" y="885" />
+              <mxPoint x="600" y="350" />
+            </Array>
+            <mxPoint x="650" y="760" as="sourcePoint" />
+            <mxPoint x="700" y="710" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mDRZVATWOAS0x9TDAL-h-2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="User Requests OFF" vertex="1">
+          <mxGeometry height="30" width="60" x="540" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="mDRZVATWOAS0x9TDAL-h-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Recovering - Output OFF" vertex="1">
+          <mxGeometry height="60" width="120" x="680" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="mDRZVATWOAS0x9TDAL-h-4" edge="1" parent="1" source="wq-QDxub1fuudRiTXMVS-5" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="mDRZVATWOAS0x9TDAL-h-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="740" y="1070" />
+            </Array>
+            <mxPoint x="630" y="750" as="sourcePoint" />
+            <mxPoint x="680" y="700" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mDRZVATWOAS0x9TDAL-h-5" edge="1" parent="1" source="mDRZVATWOAS0x9TDAL-h-3" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="wq-QDxub1fuudRiTXMVS-2" value="">
+          <mxGeometry height="50" relative="1" width="50" x="-0.0712" as="geometry">
+            <Array as="points">
+              <mxPoint x="740" y="350" />
+            </Array>
+            <mxPoint x="700" y="600" as="sourcePoint" />
+            <mxPoint x="750" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mDRZVATWOAS0x9TDAL-h-6" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="User Requests Recovery" vertex="1">
+          <mxGeometry height="30" width="60" x="680" y="855" as="geometry" />
+        </mxCell>
+        <mxCell id="mDRZVATWOAS0x9TDAL-h-7" edge="1" parent="1" source="mDRZVATWOAS0x9TDAL-h-3" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="wq-QDxub1fuudRiTXMVS-5" value="">
+          <mxGeometry height="50" relative="1" width="50" x="-0.2049" as="geometry">
+            <Array as="points">
+              <mxPoint x="880" y="670" />
+              <mxPoint x="880" y="1280" />
+              <mxPoint x="240" y="1280" />
+              <mxPoint x="240" y="1070" />
+            </Array>
+            <mxPoint x="690" y="980" as="sourcePoint" />
+            <mxPoint x="740" y="930" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mDRZVATWOAS0x9TDAL-h-8" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Recovery Failed" vertex="1">
+          <mxGeometry height="30" width="60" x="820" y="855" as="geometry" />
+        </mxCell>
+        <mxCell id="mDRZVATWOAS0x9TDAL-h-10" edge="1" parent="1" source="mDRZVATWOAS0x9TDAL-h-11" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="wq-QDxub1fuudRiTXMVS-1" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="380" y="40" as="sourcePoint" />
+            <mxPoint x="520" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mDRZVATWOAS0x9TDAL-h-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Start" vertex="1">
+          <mxGeometry height="60" width="120" x="320" y="-60" as="geometry" />
+        </mxCell>
+        <mxCell id="mDRZVATWOAS0x9TDAL-h-12" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Power Applied / MCU Reset" vertex="1">
+          <mxGeometry height="30" width="80" x="300" y="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

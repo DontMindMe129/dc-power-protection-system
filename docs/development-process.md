@@ -46,4 +46,4 @@ Năm nhóm tài liệu của System Specification được ánh xạ vào repo n
 
 ## 5. Trạng thái hiện tại
 
-Dự án đang ở Giai đoạn 2. Bản cơ sở `concept.md` và `product-requirements.md` là đầu vào cho kiến trúc hệ thống. `design-specification.md` đang tổng hợp sáu diagram cùng trách nhiệm các khối, interface và hành vi bảo vệ–phục hồi. Các thông số tạm thời và vấn đề còn mở phải tiếp tục được kiểm tra; chưa coi đặc tả thiết kế là hoàn tất hoặc sẵn sàng triển khai phần cứng/firmware.
+Dự án đang ở Giai đoạn 2. Bản cơ sở `concept.md` và `product-requirements.md` là đầu vào cho kiến trúc hệ thống. `design-specification.md` tổng hợp bảy diagram cùng trách nhiệm các khối, interface, trạng thái và hành vi bảo vệ–phục hồi. Các thông số tạm thời và vấn đề còn mở phải tiếp tục được kiểm tra; chưa coi đặc tả thiết kế là hoàn tất hoặc sẵn sàng triển khai phần cứng/firmware.

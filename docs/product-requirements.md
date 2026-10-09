@@ -141,7 +141,7 @@ Sau khi xảy ra ngắt bảo vệ, hệ thống phải duy trì đường công
 
 ### FR-11 — Phục hồi hoạt động
 
-Hệ thống phải hỗ trợ yêu cầu phục hồi sau lỗi và kiểm tra lại điều kiện an toàn trước khi cho phép đóng đường công suất.
+Hệ thống phải hỗ trợ phục hồi thủ công theo yêu cầu người dùng, không tự động thử cấp điện lại sau lỗi. Khi kiểm tra phục hồi đạt và trạng thái lỗi đã được xóa, hệ thống trở về READY với đầu ra vẫn OFF. Phục hồi và bật đầu ra là hai thao tác riêng: người dùng phải gửi yêu cầu ON, và hệ thống phải kiểm tra lại điều kiện vận hành hiện tại trước khi đóng đường công suất.
 
 ### FR-12 — Giao diện người dùng
 
@@ -262,7 +262,7 @@ Các quyết định sau chưa được chốt trong Product Requirement v0.1:
 1. Ngưỡng cảnh báo, ngưỡng ngắt và thời gian cho phép cụ thể của từng profile tải.
 2. Ngưỡng tác động và dung sai của bảo vệ quá dòng nhanh.
 3. Giới hạn điện áp, dòng và năng lượng tuyệt đối của phần cứng ngoài miền vận hành định mức.
-4. Cơ chế phục hồi sau lỗi, thời gian chờ và giới hạn số lần tự thử lại, nếu có.
+4. Tiêu chí kiểm tra phục hồi theo từng loại lỗi và thời gian chờ cụ thể; phục hồi thủ công, không tự động retry và cần lệnh ON riêng đã được chốt.
 5. Độ phân giải hiển thị và tần số lấy mẫu nội bộ cần thiết.
 6. Loại giao diện người dùng và phương thức nhập cấu hình.
 7. Loại đầu nối nguồn và tải.

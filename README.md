@@ -11,7 +11,7 @@ Tài liệu đang hoạt động:
 - [`docs/concept.md`](docs/concept.md): phạm vi và cách hiểu hiện tại của dự án.
 - [`docs/product-requirements.md`](docs/product-requirements.md): yêu cầu sản phẩm, thông số tạm thời và các vấn đề còn mở.
 - [`docs/design-specification.md`](docs/design-specification.md): sơ đồ kiến trúc, trách nhiệm các khối, interface và hành vi bảo vệ–phục hồi.
-- [`docs/diagrams/system-architecture.drawio`](docs/diagrams/system-architecture.drawio): bản vẽ gốc gồm sáu page; SVG tương ứng nằm trong `docs/diagrams/`.
+- [`docs/diagrams/system-architecture.drawio`](docs/diagrams/system-architecture.drawio): bản vẽ gốc gồm bảy page (context, block diagram, bốn subsystem và state diagram); SVG tương ứng nằm trong `docs/diagrams/`.
 - [`docs/development-process.md`](docs/development-process.md): quy trình phát triển và điều kiện chuyển giai đoạn theo môn học.
 
 Phiên bản tài liệu được sinh trước đây vẫn được bảo tồn trên nhánh `main` và tag `archive/generated-v1`; chỉ dùng làm nguồn tham khảo, không phải thiết kế đã được chấp thuận.
