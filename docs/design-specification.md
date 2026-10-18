@@ -96,9 +96,61 @@ Tên chuẩn trong bảng dưới đây dùng để mô tả interface; các nh�
 | Display Information | MCU | Display | Giá trị đo, trạng thái và cảnh báo |
 | `V_CTRL_5V`, `V_CTRL_3V3` | Internal Control Power Supply | Các khối cần nguồn | Rail nguồn điện tử; phân phối cụ thể TBD |
 
-## 5. Trạng thái và hành vi hệ thống
+## 5. Các tình huống bất thường về điện
 
-### 5.1. State diagram
+### 5.1. Hiện tượng, nguyên nhân và ảnh hưởng
+
+Bảng dưới phân tích các hiện tượng có thể xảy ra trên nguồn, đường dẫn và tải. Việc liệt kê một hiện tượng không đồng nghĩa sản phẩm đã cam kết phát hiện hoặc bảo vệ được hiện tượng đó. Phạm vi xử lý được phân biệt riêng tại mục 5.2.
+
+| Hiện tượng | Nguyên nhân có thể xảy ra | Biểu hiện và ảnh hưởng |
+| --- | --- | --- |
+| Điện áp nguồn quá cao, kéo dài | Cắm sai adapter, đặt sai điện áp nguồn điều chỉnh hoặc bộ nguồn bị lỗi | Điện áp đầu vào tăng, có thể truyền tới tải và gây quá áp cho nguồn nội bộ nếu không được hạn chế hoặc ngắt phù hợp |
+| Điện áp nguồn quá thấp hoặc mất nguồn | Nguồn không đủ công suất, nguồn tự giới hạn dòng, dây cấp sụt áp hoặc nguồn bị ngắt | V_in giảm; V_load có thể giảm theo; nguồn điều khiển có thể mất ổn định hoặc mất hoàn toàn |
+| Xung điện áp đầu vào | Dao động giữa điện cảm dây và tụ khi cắm nguồn, đóng/ngắt dòng hoặc nhiễu từ nguồn | Điện áp biến đổi nhanh; có thể vượt khả năng chịu đựng của linh kiện trước khi firmware phản ứng |
+| Đấu ngược cực nguồn | Đấu nhầm cực dương và cực âm | Điện áp ngược xuất hiện tại đầu vào ngoài, có thể gây hỏng linh kiện hoặc dòng sự cố nếu không được chặn |
+| Quá tải ở tải | Tải tiêu thụ vượt cấu hình cho phép; tải cơ tăng hoặc motor bị kẹt, tùy loại | I_load tăng, tổn hao và nhiệt tăng; nguồn có thể sụt áp |
+| Ngắn mạch nhánh tải | Chập dây, đầu ra hoặc bên trong tải | I_load có thể tăng rất lớn, V_load thấp; nếu nguồn giới hạn dòng hoặc tự ngắt thì V_in cũng có thể sụt và dòng đo được có thể không đạt ngưỡng HW_OCP |
+| Dòng khởi động hoặc đỉnh dòng trong vận hành | Nạp tụ đầu vào, khởi động motor hoặc tải đổi chế độ hoạt động | Dòng tăng tạm thời; có thể là hành vi hợp lệ theo profile hoặc vượt giới hạn hệ thống |
+| Sụt áp quá lớn trên đường dẫn | Dòng lớn hoặc điện trở đường dẫn tăng do tiếp xúc kém, connector lỏng, phần tử công suất dẫn không tốt | V_drop tăng, tải thiếu áp; vị trí có điện trở lớn có thể phát nhiệt dù dòng chưa vượt giới hạn |
+| Đường dẫn hở hoặc chập chờn | Đứt dây, mất tiếp xúc hoặc phần tử đóng/ngắt không dẫn như yêu cầu | Khi yêu cầu ON, tải có thể không nhận điện hoặc bị cấp điện gián đoạn; phép đo tại PCB không nhất thiết nhận biết mọi điểm hở ngoài PCB |
+| Xung điện áp phía tải khi ngắt | Năng lượng trong điện cảm của tải hoặc dây cần đường thoát khi dòng bị ngắt | Điện áp tại nút liên quan có thể vượt miền cho phép hoặc đảo cực; bảo vệ xung đầu vào không mặc định bảo vệ được mọi nút phía tải |
+| Điện áp còn lại hoặc cấp ngược từ phía tải | Tụ phía tải còn tích điện, tải có nguồn khác hoặc có khả năng trả năng lượng | V_load có thể còn khác 0 khi switch OFF; có thể xuất hiện dòng ngược nếu topology cho phép |
+| Quá dòng/chập bên trong bo mạch | Lỗi lắp ráp, linh kiện hoặc rail nguồn điều khiển bị chập | Dòng đầu vào chung có thể tăng; Current Sensing đặt trên nhánh tải không quan sát trực tiếp dòng sự cố riêng của nhánh điều khiển |
+
+Các hiện tượng trên có thể đi cùng nhau. Ngắn mạch là một nguyên nhân, quá dòng và sụt áp là những biểu hiện có thể phát sinh; chúng không phải các lỗi vật lý độc lập trong mọi trường hợp. Khi gần ổn định, V_drop xấp xỉ I_load nhân với điện trở đường dẫn, nên sụt áp lớn có thể do dòng tăng hoặc điện trở tăng.
+
+Không kết luận nguyên nhân chỉ từ một phép đo: V_load thấp có thể do switch OFF bình thường, nguồn sụt, ngắn mạch hoặc đường dẫn hở. Phải xét vị trí đo, trạng thái switch, các đại lượng còn lại và cấu hình. Dòng khởi động/đỉnh dòng hợp lệ theo profile không mặc định là warning hoặc fault.
+
+Tài liệu kỹ thuật tham khảo cho các nhóm hiện tượng: [TI — 11 Ways to Protect Your Power Path](https://www.ti.com/product-category/power-management/power-protection-switches-controllers/11-ways-to-protect-your-power-path.html) và [Analog Devices — Complete System Power Protection Design Guide](https://www.analog.com/en/resources/technical-articles/complete-system-power-protection-design-guide.html). Đây là tài liệu giải thích kỹ thuật, không phải danh sách chức năng sản phẩm đã được duyệt.
+
+### 5.2. Phạm vi xử lý và phân chia trách nhiệm
+
+Bảng này ghi nhận yêu cầu đã có, quyết định chức năng đã chốt và những cơ chế còn mở. Một chức năng có trong block diagram chưa đồng nghĩa khả năng bảo vệ đã được tính toán hoặc kiểm chứng. Không tự bổ sung chức năng bảo vệ ngoài phạm vi chỉ vì hiện tượng có trong mục 5.1.
+
+| Tình huống | Phạm vi/trạng thái hiện tại | Phản ứng hoặc cơ chế | Khối chịu trách nhiệm và điểm còn mở |
+| --- | --- | --- | --- |
+| V_in gần giới hạn thấp/cao nhưng vẫn trong miền cho phép cấp điện | Warning V_in đã chốt ở mức chức năng | Khi đang ON, cảnh báo và tiếp tục cấp điện; hết cảnh báo thì xóa warning tương ứng. Không ngắt chỉ vì warning kéo dài nếu chưa đạt tiêu chí fault | MCU dựa trên V_in Sensing; miền cảnh báo, thời gian đánh giá và hysteresis TBD |
+| V_in đạt tiêu chí quá thấp/quá cao của cấu hình | Fault V_in đã chốt ở mức chức năng | Giữ/ngắt đầu ra OFF, ghi nhận nguyên nhân và giữ FAULT; nguồn bình thường trở lại không tự xóa lỗi | MCU; ngưỡng và timing TBD. Chỉ áp dụng trong miền phần cứng và nguồn điều khiển còn có thể hoạt động; không thay thế bảo vệ quá áp gây hư hỏng |
+| Dòng tải quá độ hợp lệ | Đã có trong FR-07 | Tiếp tục cấp điện trong miền dòng/thời gian được cấu hình cho phép; không trì hoãn bảo vệ quá dòng nghiêm trọng | MCU quản lý profile; giới hạn phần cứng và ngưỡng HW_OCP cần phối hợp |
+| Quá tải nhánh tải do MCU giám sát | Yêu cầu quản lý dòng đã có; phân loại warning/fault cụ thể chưa chốt | Đánh giá theo cấu hình/profile; các miền cảnh báo và tiêu chí ngắt còn cần xác định | MCU dựa trên Current Sensing; ngưỡng, thời gian và tiêu chí phục hồi theo lỗi TBD |
+| Quá dòng nghiêm trọng/ngắn mạch nhánh tải | Bảo vệ phần cứng độc lập firmware đã nằm trong phạm vi | HW_OCP phát hiện, giữ lỗi và cưỡng bức Power Switch OFF; báo trạng thái cho MCU | HW_OCP + Power Switch; ngưỡng, độ trễ và miền sự cố xử lý được TBD. Khi nguồn tự giới hạn dòng thấp, cần xét thêm thông tin điện áp và logic hệ thống; không bảo đảm HW_OCP luôn nhận diện ngắn mạch |
+| Sụt áp đường công suất quá mức | Đã có yêu cầu giám sát V_drop; phân loại warning/fault cụ thể chưa chốt | Đánh giá hiệu điện áp giữa hai nút đo theo trạng thái ON và cấu hình | MCU dựa trên V_in/V_load Sensing; phải xét sai số đo, vị trí đo và timing. Đối chiếu lại vị trí đo với Product Requirements |
+| Ngược cực và xung điện áp đầu vào | Có chức năng bảo vệ trong kiến trúc Input Protection | Chặn ngược cực; hạn chế xung bằng Transient Suppression với giới hạn được thiết kế | Input Protection; topology, mức điện áp còn lại và năng lượng chịu được TBD. Chưa chốt việc báo/latch sự kiện này về MCU; không mặc định mọi xung bị kẹp đều tạo FAULT |
+| Quá áp đầu vào gây nguy hiểm cho phần cứng, đặc biệt kéo dài | Cơ chế xử lý chưa xác định đầy đủ | Không mặc định TVS hoặc MCU có thể bảo vệ được; cần đánh giá có phải bổ sung ngắt/giới hạn áp bằng hardware hay không | Phân tích tại Input Protection và Internal Supply; mở rộng bảo vệ áp hardware ở nhánh tải chưa được chốt |
+| Dòng sự cố lớn trên phần đường nguồn chung được bảo vệ | Có chức năng Fault-current Isolation trong kiến trúc | Cô lập dòng sự cố; có thể làm mất nguồn cả điều khiển và tải | Input Protection; chưa chốt fuse/eFuse hay giải pháp khác, thời gian tác động và phối hợp chọn lọc với HW_OCP |
+| Quá dòng/chập nhánh nguồn điều khiển | Khả năng bảo vệ cụ thể còn TBD | Đánh giá bảo vệ của Internal Supply và khả năng cô lập sự cố đầu vào; không coi HW_OCP tải là cơ chế bảo vệ trực tiếp nhánh này | Internal Supply/Input Protection; chưa chốt cơ chế hoặc cam kết duy trì MCU hoạt động trong sự cố này |
+| Hở/chập chờn hoặc đầu ra không phù hợp lệnh ON/OFF | FR-05 đã yêu cầu phát hiện điện áp đầu ra không phù hợp; khả năng chẩn đoán nguyên nhân còn mở | Đối chiếu V_load với lệnh switch và các phép đo khác; chưa cam kết nhận diện mọi lỗi dây hoặc linh kiện | MCU, sensing và Power Switch; tiêu chí, giới hạn quan sát và phản ứng cụ thể TBD |
+| Xung phía tải, dòng ngược và tải trả năng lượng | Cần xét tương thích với tải đại diện; tải cảm mạnh hoặc trả năng lượng lớn ngoài phạm vi ban đầu theo concept | Không mặc định kẹp xung đầu vào xử lý được xung đầu ra, hoặc switch OFF bảo đảm V_load bằng 0/chặn dòng ngược | Thiết kế nhánh tải; đường thoát năng lượng, khả năng chặn ngược và miền xung được hỗ trợ TBD. Bảng này không mở rộng phạm vi tải |
+
+Hai vùng bảo vệ được phân chia theo vùng cấp nguồn và vị trí tác động, không theo quy tắc tách riêng dòng với áp. Input Protection nằm trước điểm chia nhánh; bảo vệ nhánh tải tác động lên Power Switch. Ngắt riêng tải không chủ động cắt Internal Supply, nhưng dòng sự cố tải vẫn có thể làm nguồn chung sụt và khiến MCU reset. Khả năng duy trì điều khiển cần được phân tích và thử nghiệm, không được suy ra chỉ từ việc có hai nhánh.
+
+### 5.3. Nội dung tiếp tục đặc tả
+
+Với từng nhóm trong phạm vi, cần hoàn thiện điều kiện warning/fault, trạng thái áp dụng, phản ứng và nguyên tắc phục hồi ở cấp hệ thống. Ngưỡng còn mở, timing, cách đo, thuật toán và phối hợp bảo vệ được cụ thể hóa trong Hardware/Software Specification; các phép thử và tiêu chí đạt được đưa vào Test Specification. Giới hạn chịu đựng phần cứng không được đồng nhất với giới hạn vận hành công bố.
+
+## 6. Trạng thái và hành vi hệ thống
+
+### 6.1. State diagram
 
 ![System state diagram](diagrams/system-architecture-system-state-diagram.svg)
 
@@ -116,7 +168,7 @@ Tên chuẩn trong bảng dưới đây dùng để mô tả interface; các nh�
 | FAULT | OFF | Giữ lỗi và chờ yêu cầu phục hồi thủ công |
 | RECOVERING | OFF | Kiểm tra phục hồi và xử lý xóa lỗi |
 
-### 5.2. Điều kiện chuyển trạng thái
+### 6.2. Điều kiện chuyển trạng thái
 
 | Từ | Điều kiện/sự kiện | Đến |
 | --- | --- | --- |
@@ -138,7 +190,7 @@ Tên chuẩn trong bảng dưới đây dùng để mô tả interface; các nh�
 
 Nếu không có điều kiện chuyển hợp lệ, hệ thống giữ trạng thái hiện tại. Điều kiện cảnh báo kéo dài chỉ dẫn tới ngắt khi đạt tiêu chí tương ứng với loại lỗi/profile; không mặc định mọi cảnh báo có chung một timeout.
 
-### 5.3. Giám sát, khởi động và yêu cầu ON/OFF
+### 6.3. Giám sát, khởi động và yêu cầu ON/OFF
 
 Khi nguồn điều khiển còn hoạt động, hệ thống tiếp tục giám sát V_in, V_load, I_load và trạng thái bảo vệ dù Power Switch ON hay OFF, đồng thời cung cấp trạng thái trên giao diện. Việc diễn giải thông tin đo phụ thuộc trạng thái switch.
 
@@ -148,7 +200,7 @@ Kiểm tra trước ON xác nhận lại điều kiện vận hành hiện tại
 
 Lệnh OFF của người dùng ngắt tải bình thường, không tự phát sinh FAULT và không xóa lỗi đang giữ. Lỗi do firmware hoặc hardware đều đưa hệ thống về OFF + FAULT. Với lỗi phần cứng, switch ngắt độc lập trước khi MCU tiếp nhận trạng thái và cập nhật giao diện.
 
-### 5.4. Phục hồi và bật lại
+### 6.4. Phục hồi và bật lại
 
 1. Khi khởi động/reset, giữ Power Switch OFF cho đến khi có điều kiện và yêu cầu enable hợp lệ.
 2. Khi bảo vệ phần cứng phát hiện quá dòng nghiêm trọng, Fault Memory giữ lỗi và SHUTDOWN_REQUEST ngắt switch độc lập với MCU.
@@ -161,7 +213,7 @@ Kiểm tra phục hồi quyết định có được xóa lỗi đang giữ hay 
 
 Khi tải đã ngắt, `I_load ≈ 0` không đủ chứng minh ngắn mạch đã được loại bỏ. Tiêu chí phục hồi, cách kiểm tra lỗi còn tồn tại và phản ứng nếu lỗi tái xuất hiện phải được xác định trước khi triển khai; không mặc định có thể kiểm tra mọi lỗi chỉ bằng phép đo khi OFF.
 
-## 6. Các điểm cần hoàn thiện
+## 7. Các điểm cần hoàn thiện
 
 - Sơ đồ tổng thể ghi `V_Ctrl_5V → MCU`: cần xác định khối MCU là module nhận 5 V hay chip dùng rail 3.3 V; chưa coi đây là quyết định cấp 5 V trực tiếp cho chip.
 - Sửa lỗi chữ `Dectection` trong diagram bảo vệ và thống nhất tên tín hiệu giữa diagram tổng thể, diagram con và bảng interface.
@@ -170,6 +222,6 @@ Khi tải đã ngắt, `I_load ≈ 0` không đủ chứng minh ngắn mạch đ
 - Chưa chốt việc bổ sung yêu cầu từ MCU để latch phần cứng giữ mọi lỗi firmware; không bổ sung interface này trong kiến trúc hiện tại.
 - Đối chiếu vị trí đo V_in và các quyết định kiến trúc với Product Requirements trước khi chốt bản đặc tả để triển khai.
 
-## 7. Quản lý bản vẽ
+## 8. Quản lý bản vẽ
 
 Chỉnh sửa trên file `.drawio`, sau đó xuất lại SVG của page tương ứng và đưa hai bản vào cùng thay đổi Git. SVG dùng để xem trên GitHub; `.drawio` là nguồn chỉnh sửa. Không cần xuất DOCX/PPTX vào repo.
