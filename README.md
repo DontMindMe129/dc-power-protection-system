@@ -1,10 +1,10 @@
 # Hệ thống giám sát và bảo vệ đường nguồn DC
 
-> Trạng thái: đang xây dựng lại từ nguyên lý cơ bản — Giai đoạn 2: Kiến trúc hệ thống và Design Specification v0.1 (bản nháp).
+> Trạng thái: đã chốt Design Specification v0.1 làm baseline kiến trúc và hành vi hệ thống, hoàn tất Giai đoạn 2 ở mức chức năng; chuẩn bị Giai đoạn 3: Đặc tả thành phần.
 
 Dự án nghiên cứu một thiết bị được mắc giữa nguồn DC bên ngoài và tải DC bên ngoài. Thiết bị giám sát trạng thái điện của đường công suất và có khả năng ngắt tải khi phát hiện điều kiện không an toàn.
 
-Nhánh này được chủ ý giữ tối giản. Kiến trúc chức năng đang được tổng hợp từ các block diagram của nhóm; linh kiện, sơ đồ nguyên lý, PCB và firmware chưa được chốt.
+Nhánh này được chủ ý giữ tối giản. Kiến trúc chức năng và hành vi đã được thống nhất từ các diagram của nhóm. Các thông số tạm thời giữ nguyên trạng thái; linh kiện, sơ đồ nguyên lý, PCB và firmware chưa được chốt. Baseline này là đầu vào cho đặc tả phần cứng, phần mềm và kiểm thử, chưa phải thiết kế sẵn sàng chế tạo.
 
 Tài liệu đang hoạt động:
 

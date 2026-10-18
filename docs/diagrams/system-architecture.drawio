@@ -38,7 +38,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="Y_96nb_gBaRkuI8DH07N" name="system-block-diagram">
-    <mxGraphModel dx="2912" dy="1554" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="4412" dy="2355" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -46,7 +46,7 @@
           <mxGeometry height="920" width="1720" x="200" y="280" as="geometry" />
         </mxCell>
         <mxCell id="yYcHeiu1YVbO2kBcwQ8H-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;strokeWidth=2;" value="" vertex="1">
-          <mxGeometry height="720" width="1000" x="560" y="440" as="geometry" />
+          <mxGeometry height="720" width="1040" x="540" y="440" as="geometry" />
         </mxCell>
         <mxCell id="yYcHeiu1YVbO2kBcwQ8H-3" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=default;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="&lt;div style=&quot;text-align: center;&quot;&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Chú thích:&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Đường đen đậm&lt;/b&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;: Đường công suất&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;div style=&quot;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(255, 51, 51), rgb(255, 255, 255));&quot;&gt;&lt;div style=&quot;&quot;&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(255, 51, 51), rgb(255, 255, 255));&quot;&gt;Đường đỏ đậm&lt;/b&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255)); font-weight: normal;&quot;&gt;: Đường nguồn nuôi các khối điện tử&lt;/span&gt;&lt;/div&gt;&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;div style=&quot;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Đường đen mảnh: Đường tín hiệu&lt;/span&gt;&lt;/div&gt;&lt;/span&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="200" width="160" x="200" y="280" as="geometry" />
@@ -73,7 +73,7 @@
           <mxGeometry height="60" width="120" x="1200" y="1080" as="geometry" />
         </mxCell>
         <mxCell id="yYcHeiu1YVbO2kBcwQ8H-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Load" vertex="1">
-          <mxGeometry height="60" width="120" x="1600" y="1080" as="geometry" />
+          <mxGeometry height="60" width="120" x="1640" y="1080" as="geometry" />
         </mxCell>
         <mxCell id="yYcHeiu1YVbO2kBcwQ8H-12" edge="1" parent="1" source="yYcHeiu1YVbO2kBcwQ8H-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;" target="yYcHeiu1YVbO2kBcwQ8H-26">
           <mxGeometry relative="1" as="geometry" />
@@ -91,8 +91,12 @@
           <mxGeometry height="60" width="120" x="800" y="940" as="geometry" />
         </mxCell>
         <mxCell id="yYcHeiu1YVbO2kBcwQ8H-17" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="yYcHeiu1YVbO2kBcwQ8H-16" value="">
-          <mxGeometry height="50" relative="1" width="50" as="geometry">
-            <mxPoint x="860" y="1110" as="sourcePoint" />
+          <mxGeometry height="50" relative="1" width="50" x="-0.5808" as="geometry">
+            <Array as="points">
+              <mxPoint x="560" y="1040" />
+              <mxPoint x="860" y="1040" />
+            </Array>
+            <mxPoint x="560" y="1110" as="sourcePoint" />
             <mxPoint x="1040" y="930" as="targetPoint" />
           </mxGeometry>
         </mxCell>
@@ -506,7 +510,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="DTQy3Eu6Zol5OamtDbJr" name="system-state-diagram">
-    <mxGraphModel dx="3337" dy="2509" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1838" dy="1709" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -547,26 +551,14 @@
         <mxCell id="wq-QDxub1fuudRiTXMVS-9" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Startup Checks Failed" vertex="1">
           <mxGeometry height="30" width="60" x="-60" y="590" as="geometry" />
         </mxCell>
-        <mxCell id="wq-QDxub1fuudRiTXMVS-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Checking Before ON" vertex="1">
-          <mxGeometry height="60" width="120" x="320" y="480" as="geometry" />
-        </mxCell>
-        <mxCell id="wq-QDxub1fuudRiTXMVS-13" edge="1" parent="1" source="wq-QDxub1fuudRiTXMVS-2" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="wq-QDxub1fuudRiTXMVS-12" value="">
-          <mxGeometry height="50" relative="1" width="50" as="geometry">
-            <mxPoint x="420" y="490" as="sourcePoint" />
-            <mxPoint x="470" y="440" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
         <mxCell id="wq-QDxub1fuudRiTXMVS-14" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="User Requests ON" vertex="1">
-          <mxGeometry height="30" width="60" x="320" y="415" as="geometry" />
+          <mxGeometry height="30" width="110" x="270" y="490" as="geometry" />
         </mxCell>
-        <mxCell id="wq-QDxub1fuudRiTXMVS-15" edge="1" parent="1" source="wq-QDxub1fuudRiTXMVS-12" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="wq-QDxub1fuudRiTXMVS-3" value="">
+        <mxCell id="wq-QDxub1fuudRiTXMVS-15" edge="1" parent="1" source="wq-QDxub1fuudRiTXMVS-2" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="wq-QDxub1fuudRiTXMVS-3" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
-            <mxPoint x="400" y="650" as="sourcePoint" />
+            <mxPoint x="380" y="540" as="sourcePoint" />
             <mxPoint x="450" y="600" as="targetPoint" />
           </mxGeometry>
-        </mxCell>
-        <mxCell id="wq-QDxub1fuudRiTXMVS-16" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Enable Checks Passed" vertex="1">
-          <mxGeometry height="30" width="60" x="320" y="570" as="geometry" />
         </mxCell>
         <mxCell id="wq-QDxub1fuudRiTXMVS-17" edge="1" parent="1" source="wq-QDxub1fuudRiTXMVS-2" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="wq-QDxub1fuudRiTXMVS-5" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
@@ -580,19 +572,6 @@
         </mxCell>
         <mxCell id="wq-QDxub1fuudRiTXMVS-18" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Fault Detected" vertex="1">
           <mxGeometry height="30" width="60" x="20" y="590" as="geometry" />
-        </mxCell>
-        <mxCell id="wq-QDxub1fuudRiTXMVS-19" edge="1" parent="1" source="wq-QDxub1fuudRiTXMVS-12" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="wq-QDxub1fuudRiTXMVS-5" value="">
-          <mxGeometry height="50" relative="1" width="50" as="geometry">
-            <Array as="points">
-              <mxPoint x="160" y="510" />
-              <mxPoint x="160" y="1070" />
-            </Array>
-            <mxPoint x="200" y="660" as="sourcePoint" />
-            <mxPoint x="250" y="610" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="wq-QDxub1fuudRiTXMVS-20" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Enable Checks Failed" vertex="1">
-          <mxGeometry height="30" width="60" x="100" y="590" as="geometry" />
         </mxCell>
         <mxCell id="wq-QDxub1fuudRiTXMVS-21" edge="1" parent="1" source="wq-QDxub1fuudRiTXMVS-3" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="wq-QDxub1fuudRiTXMVS-4" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">

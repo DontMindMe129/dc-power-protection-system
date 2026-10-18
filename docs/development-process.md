@@ -46,4 +46,6 @@ Năm nhóm tài liệu của System Specification được ánh xạ vào repo n
 
 ## 5. Trạng thái hiện tại
 
-Dự án đang ở Giai đoạn 2. Bản cơ sở `concept.md` và `product-requirements.md` là đầu vào cho kiến trúc hệ thống. `design-specification.md` tổng hợp bảy diagram cùng trách nhiệm các khối, interface, trạng thái và hành vi bảo vệ–phục hồi. Các thông số tạm thời và vấn đề còn mở phải tiếp tục được kiểm tra; chưa coi đặc tả thiết kế là hoàn tất hoặc sẵn sàng triển khai phần cứng/firmware.
+Giai đoạn 2 đã hoàn tất ở mức kiến trúc và hành vi chức năng: `design-specification.md` v0.1 được chốt làm baseline, cùng `concept.md`, `product-requirements.md` và bảy diagram hiện tại. Nội dung bao gồm trách nhiệm các khối, interface chức năng, trạng thái, cấu hình, bảo vệ, phục hồi và chính sách sau reset.
+
+Bước tiếp theo là Giai đoạn 3: cụ thể hóa Hardware Specification, Software Specification và Test Specification từ baseline này. Các thông số tạm thời không tự trở thành giá trị cuối cùng; linh kiện, mức logic, ngưỡng, timing và tiêu chí kiểm chứng còn mở được giải quyết ở đặc tả thành phần và thiết kế chi tiết. Hoàn tất baseline Design Specification không đồng nghĩa đã kiểm chứng phần cứng hoặc sẵn sàng chế tạo PCB.
