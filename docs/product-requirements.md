@@ -54,7 +54,7 @@ Người dùng kết nối nguồn DC và tải tương thích, sau đó lựa c
 
 ### UC-02 — Cấp điện và giám sát tải bình thường
 
-Người dùng yêu cầu bật đầu ra. Nếu điều kiện ban đầu hợp lệ, hệ thống đóng đường công suất và cấp điện cho tải. Trong quá trình hoạt động, hệ thống đo và hiển thị `V_in`, `V_load`, `I_load`, hiển thị trạng thái đường công suất và tiếp tục cấp điện khi các đại lượng nằm trong giới hạn của cấu hình.
+Sau cấp nguồn/reset, hệ thống kiểm tra khởi động và giữ đầu ra OFF. Khi đạt điều kiện, hệ thống vào READY và chờ người dùng yêu cầu ON. Trong READY, các điều kiện cho phép bật được duy trì bằng giám sát liên tục; lệnh ON cho phép đóng đường công suất, không có bước Enable Checks riêng. Lỗi phải ngắt được ưu tiên nếu xuất hiện đồng thời với lệnh ON. Hệ thống đo và hiển thị `V_in`, `V_load`, `I_load` khi nguồn điều khiển còn hoạt động, dù đầu ra ON hay OFF; cách đánh giá phụ thuộc trạng thái switch.
 
 ### UC-03 — Tải có dòng khởi động
 
@@ -84,7 +84,7 @@ Yêu cầu này không đồng nghĩa với việc bảo đảm `V_load = 0 V` n
 
 ### UC-06 — Phục hồi sau lỗi
 
-Sau khi nguyên nhân lỗi được loại bỏ, hệ thống nhận yêu cầu khôi phục và phải kiểm tra lại điều kiện an toàn trước khi cho phép đóng đường công suất. Cơ chế phát sinh yêu cầu khôi phục (thủ công hoặc tự động), thời gian chờ và giới hạn số lần thử hiện là TBD.
+Người dùng xử lý nguyên nhân lỗi và yêu cầu phục hồi thủ công; hệ thống không tự động retry. Hệ thống giữ yêu cầu đầu ra OFF, kiểm tra điều kiện chung và điều kiện theo nguyên nhân, rồi xóa và xác nhận lỗi tại firmware/HW_OCP khi hợp lệ. Thành công thì về READY với đầu ra vẫn OFF, chờ lệnh ON riêng; thất bại thì giữ FAULT và hiển thị lý do. Không coi dòng bằng 0 khi OFF là bằng chứng tải đã hết ngắn mạch. Tiêu chí định lượng và thời gian chờ cụ thể vẫn TBD.
 
 ### UC-07 — Thay đổi nguồn hoặc tải
 
@@ -117,6 +117,8 @@ Hệ thống phải:
 - phân biệt trạng thái bình thường, cảnh báo và lỗi;
 - phát hiện điện áp đầu ra không phù hợp với trạng thái đóng hoặc ngắt mong đợi.
 
+Khi ON, hệ thống đánh giá sụt áp qua `V_drop` sau khi xét quá độ hợp lệ; khi OFF, cho phép điện áp dư theo đặc tính tải và chỉ xác định lỗi đầu ra khi đạt tiêu chí bất thường. Không tự kết luận switch hỏng chỉ từ `V_load`, chưa yêu cầu mạch chủ động xả tụ. Ngưỡng và thời gian chẩn đoán cụ thể vẫn TBD.
+
 ### FR-06 — Quản lý cấu hình vận hành
 
 Hệ thống phải hỗ trợ cấu hình nguồn và ba profile tải hiện tại: `RESISTIVE`, `ELECTRONIC` và `FAN`. Mỗi profile có thể xác định ngưỡng cảnh báo, ngưỡng ngắt và khoảng thời gian cho phép đối với hiện tượng quá độ. Khả năng bổ sung profile `CUSTOM` hiện là TBD.
@@ -129,7 +131,7 @@ Khi dòng tải vượt giới hạn dòng liên tục nhưng vẫn nằm trong 
 
 ### FR-08 — Cảnh báo bất thường
 
-Khi phát hiện điều kiện bất thường nhưng chưa cần ngắt tức thời, hệ thống phải thông báo cho người dùng bằng trạng thái hoặc cảnh báo phù hợp.
+Khi phát hiện điều kiện bất thường nhưng chưa cần ngắt, hệ thống phải thông báo cho người dùng bằng trạng thái hoặc cảnh báo phù hợp. Các nhóm warning vận hành hiện tại gồm `V_in`, `I_load` và `V_drop` khi đang cấp điện; quá độ hợp lệ theo profile không tự là warning. Khi đang cấp điện, còn bất kỳ warning nào thì hệ thống giữ WARNING; chỉ về RUNNING khi mọi warning đã hết và không có fault. Các nguyên nhân được ghi nhận/xóa riêng, và warning không được che mất fault. Các tiêu chí định lượng vẫn TBD.
 
 ### FR-09 — Ngắt bảo vệ
 
@@ -141,7 +143,7 @@ Sau khi xảy ra ngắt bảo vệ, hệ thống phải duy trì đường công
 
 ### FR-11 — Phục hồi hoạt động
 
-Hệ thống phải hỗ trợ phục hồi thủ công theo yêu cầu người dùng, không tự động thử cấp điện lại sau lỗi. Khi kiểm tra phục hồi đạt và trạng thái lỗi đã được xóa, hệ thống trở về READY với đầu ra vẫn OFF. Phục hồi và bật đầu ra là hai thao tác riêng: người dùng phải gửi yêu cầu ON, và hệ thống phải kiểm tra lại điều kiện vận hành hiện tại trước khi đóng đường công suất.
+Hệ thống phải hỗ trợ phục hồi thủ công theo yêu cầu người dùng, không tự động thử cấp điện lại sau lỗi. Kiểm tra phục hồi phải xét điều kiện chung, nguyên nhân lỗi và nơi giữ lỗi; chỉ về READY khi kiểm tra đạt và mọi lỗi ngăn phục hồi đã được xóa thành công. Đầu ra vẫn OFF và người dùng phải gửi yêu cầu ON riêng. Trong READY, hệ thống tiếp tục giám sát để duy trì điều kiện cho phép bật; không có bước Enable Checks riêng sau lệnh ON. Xóa latch thành công không chứng minh tải đã hết ngắn mạch; bảo vệ vẫn phải sẵn sàng khi cấp điện lại.
 
 ### FR-12 — Giao diện người dùng
 

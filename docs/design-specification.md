@@ -33,7 +33,7 @@ Khi đường công suất ON, `V_drop = V_in − V_load` phản ánh sụt áp 
 
 Khối tiếp nhận nguồn ngoài, cô lập dòng sự cố, bảo vệ ngược cực và hạn chế xung điện áp. Đầu ra là `Protected V_in`, chưa phải điện áp được ổn áp. Transient Suppression là nhánh song song về Power Return. Thứ tự và topology linh kiện cụ thể, mức kẹp xung, giới hạn năng lượng và phương thức cô lập dòng được xác định khi thiết kế phần cứng.
 
-Khối này bảo vệ đầu vào; bảo vệ quá dòng tải bằng phần cứng thuộc Hardware Overcurrent Protection, còn quản lý quá tải theo profile thuộc firmware.
+Khối này bảo vệ đầu vào chung trước điểm chia nhánh. Nguyên tắc chức năng tạm chốt là xử lý điện áp nguy hiểm từ nguồn ngoài trong miền sự cố được công bố, phối hợp với khả năng chịu áp của phần phía sau, không phụ thuộc firmware. Chưa chốt thêm mạch ngắt/giới hạn áp cụ thể. Bảo vệ quá dòng tải bằng phần cứng thuộc Hardware Overcurrent Protection, còn quản lý quá tải theo profile thuộc firmware.
 
 ### 3.2. Internal Control Power Supply
 
@@ -77,7 +77,7 @@ MCU nhận thông tin đo, trạng thái lỗi phần cứng và thao tác ngư�
 
 Buttons nhận thao tác chọn profile, điều khiển đầu ra và yêu cầu phục hồi. Display hiển thị `V_in`, `V_load`, `I_load`, trạng thái và nguyên nhân lỗi. UART phục vụ debug, kiểm thử và logging, không bắt buộc cho vận hành thông thường; buzzer không bắt buộc trong v0.1.
 
-Không cần diagram con cho MCU, Buttons hoặc Display tại bước này. Phân rã firmware, state machine và luồng UI được mô tả trong Software Specification.
+Không cần diagram con cho MCU, Buttons hoặc Display tại bước này. Trạng thái và hành vi cấp hệ thống nằm tại mục 6; phân rã firmware, cách hiện thực state machine và luồng UI được mô tả trong Software Specification.
 
 ## 4. Interface chức năng
 
@@ -132,21 +132,22 @@ Bảng này ghi nhận yêu cầu đã có, quyết định chức năng đã ch
 | V_in gần giới hạn thấp/cao nhưng vẫn trong miền cho phép cấp điện | Warning V_in đã chốt ở mức chức năng | Khi đang ON, cảnh báo và tiếp tục cấp điện; hết cảnh báo thì xóa warning tương ứng. Không ngắt chỉ vì warning kéo dài nếu chưa đạt tiêu chí fault | MCU dựa trên V_in Sensing; miền cảnh báo, thời gian đánh giá và hysteresis TBD |
 | V_in đạt tiêu chí quá thấp/quá cao của cấu hình | Fault V_in đã chốt ở mức chức năng | Giữ/ngắt đầu ra OFF, ghi nhận nguyên nhân và giữ FAULT; nguồn bình thường trở lại không tự xóa lỗi | MCU; ngưỡng và timing TBD. Chỉ áp dụng trong miền phần cứng và nguồn điều khiển còn có thể hoạt động; không thay thế bảo vệ quá áp gây hư hỏng |
 | Dòng tải quá độ hợp lệ | Đã có trong FR-07 | Tiếp tục cấp điện trong miền dòng/thời gian được cấu hình cho phép; không trì hoãn bảo vệ quá dòng nghiêm trọng | MCU quản lý profile; giới hạn phần cứng và ngưỡng HW_OCP cần phối hợp |
-| Quá tải nhánh tải do MCU giám sát | Yêu cầu quản lý dòng đã có; phân loại warning/fault cụ thể chưa chốt | Đánh giá theo cấu hình/profile; các miền cảnh báo và tiêu chí ngắt còn cần xác định | MCU dựa trên Current Sensing; ngưỡng, thời gian và tiêu chí phục hồi theo lỗi TBD |
+| Quá tải nhánh tải do MCU giám sát | Warning/fault I_load đã chốt ở mức chức năng | Quá độ hợp lệ không tự là warning; đạt tiêu chí cảnh báo thì tiếp tục cấp điện, đạt tiêu chí ngắt quá tải thì yêu cầu OFF và giữ FAULT | MCU dựa trên Current Sensing; ngưỡng và thời gian cụ thể TBD; không trì hoãn HW_OCP |
 | Quá dòng nghiêm trọng/ngắn mạch nhánh tải | Bảo vệ phần cứng độc lập firmware đã nằm trong phạm vi | HW_OCP phát hiện, giữ lỗi và cưỡng bức Power Switch OFF; báo trạng thái cho MCU | HW_OCP + Power Switch; ngưỡng, độ trễ và miền sự cố xử lý được TBD. Khi nguồn tự giới hạn dòng thấp, cần xét thêm thông tin điện áp và logic hệ thống; không bảo đảm HW_OCP luôn nhận diện ngắn mạch |
-| Sụt áp đường công suất quá mức | Đã có yêu cầu giám sát V_drop; phân loại warning/fault cụ thể chưa chốt | Đánh giá hiệu điện áp giữa hai nút đo theo trạng thái ON và cấu hình | MCU dựa trên V_in/V_load Sensing; phải xét sai số đo, vị trí đo và timing. Đối chiếu lại vị trí đo với Product Requirements |
+| Sụt áp đường công suất quá mức | Warning/fault V_drop khi ON đã chốt ở mức chức năng | Sau khi xét quá độ hợp lệ, đạt tiêu chí cảnh báo thì tiếp tục cấp điện; đạt tiêu chí ngắt thì yêu cầu OFF, ghi nhận sụt áp bất thường và giữ FAULT | MCU tính V_drop từ V_in và V_load, không cần cảm biến riêng; ngưỡng phải xét sai số đo, dòng tải, timing và vị trí đo. Các baseline sụt áp không tự là ngưỡng fault |
 | Ngược cực và xung điện áp đầu vào | Có chức năng bảo vệ trong kiến trúc Input Protection | Chặn ngược cực; hạn chế xung bằng Transient Suppression với giới hạn được thiết kế | Input Protection; topology, mức điện áp còn lại và năng lượng chịu được TBD. Chưa chốt việc báo/latch sự kiện này về MCU; không mặc định mọi xung bị kẹp đều tạo FAULT |
-| Quá áp đầu vào gây nguy hiểm cho phần cứng, đặc biệt kéo dài | Cơ chế xử lý chưa xác định đầy đủ | Không mặc định TVS hoặc MCU có thể bảo vệ được; cần đánh giá có phải bổ sung ngắt/giới hạn áp bằng hardware hay không | Phân tích tại Input Protection và Internal Supply; mở rộng bảo vệ áp hardware ở nhánh tải chưa được chốt |
+| Quá áp đầu vào gây nguy hiểm cho phần cứng, đặc biệt kéo dài | Tạm chốt trách nhiệm tại bảo vệ đầu vào chung; cơ chế cụ thể TBD | Input Protection phối hợp với khả năng chịu áp của phần phía sau để xử lý trong miền sự cố công bố bằng hardware; không mặc định TVS chịu được quá áp kéo dài hoặc MCU ngắt tải sẽ bảo vệ được Internal Supply | Input Protection và Internal Supply; có cần ngắt/giới hạn áp chủ động hay không được đánh giá khi thiết kế, chưa bổ sung linh kiện hoặc subsystem mới |
 | Dòng sự cố lớn trên phần đường nguồn chung được bảo vệ | Có chức năng Fault-current Isolation trong kiến trúc | Cô lập dòng sự cố; có thể làm mất nguồn cả điều khiển và tải | Input Protection; chưa chốt fuse/eFuse hay giải pháp khác, thời gian tác động và phối hợp chọn lọc với HW_OCP |
 | Quá dòng/chập nhánh nguồn điều khiển | Khả năng bảo vệ cụ thể còn TBD | Đánh giá bảo vệ của Internal Supply và khả năng cô lập sự cố đầu vào; không coi HW_OCP tải là cơ chế bảo vệ trực tiếp nhánh này | Internal Supply/Input Protection; chưa chốt cơ chế hoặc cam kết duy trì MCU hoạt động trong sự cố này |
-| Hở/chập chờn hoặc đầu ra không phù hợp lệnh ON/OFF | FR-05 đã yêu cầu phát hiện điện áp đầu ra không phù hợp; khả năng chẩn đoán nguyên nhân còn mở | Đối chiếu V_load với lệnh switch và các phép đo khác; chưa cam kết nhận diện mọi lỗi dây hoặc linh kiện | MCU, sensing và Power Switch; tiêu chí, giới hạn quan sát và phản ứng cụ thể TBD |
-| Xung phía tải, dòng ngược và tải trả năng lượng | Cần xét tương thích với tải đại diện; tải cảm mạnh hoặc trả năng lượng lớn ngoài phạm vi ban đầu theo concept | Không mặc định kẹp xung đầu vào xử lý được xung đầu ra, hoặc switch OFF bảo đảm V_load bằng 0/chặn dòng ngược | Thiết kế nhánh tải; đường thoát năng lượng, khả năng chặn ngược và miền xung được hỗ trợ TBD. Bảng này không mở rộng phạm vi tải |
+| V_load không phù hợp trạng thái OFF | Đã chốt hành vi chức năng theo FR-05; tiêu chí định lượng TBD | Cho phép điện áp dư hợp lệ theo đặc tính tải; chỉ khi đạt tiêu chí bất thường mới ghi nhận lỗi đầu ra, giữ yêu cầu OFF và vào FAULT | MCU, sensing và Power Switch; không yêu cầu chủ động xả tụ, không suy ra switch hỏng chỉ từ V_load, không bảo đảm cô lập được tải nếu switch hỏng ở trạng thái dẫn |
+| Hở/chập chờn đường dẫn | Phân tích nguyên nhân, không cam kết chẩn đoán mọi điểm hở | Đối chiếu lệnh switch và thông tin đo; khi ON, sụt áp bất thường được đánh giá qua V_drop, chưa kết luận chính xác phần tử gây lỗi | MCU và sensing; giới hạn quan sát dây ngoài PCB, tiêu chí và chẩn đoán cụ thể TBD |
+| Xung phía tải, dòng ngược và tải trả năng lượng | Tạm chốt trách nhiệm điện áp nguy hiểm phía tải tại thiết kế nhánh tải/Power Switch; phạm vi tải không đổi | Xét đường xử lý năng lượng, khả năng chịu xung và truyền ngược trong miền sự cố được công bố; không mặc định kẹp đầu vào bảo vệ mọi nút đầu ra hoặc OFF chặn được mọi dòng ngược | Cơ chế cụ thể TBD; chưa thêm subsystem hay linh kiện. Tải cảm mạnh hoặc trả năng lượng lớn vẫn ngoài phạm vi ban đầu; không mặc định mọi xung được xử lý đều tạo FAULT |
 
 Hai vùng bảo vệ được phân chia theo vùng cấp nguồn và vị trí tác động, không theo quy tắc tách riêng dòng với áp. Input Protection nằm trước điểm chia nhánh; bảo vệ nhánh tải tác động lên Power Switch. Ngắt riêng tải không chủ động cắt Internal Supply, nhưng dòng sự cố tải vẫn có thể làm nguồn chung sụt và khiến MCU reset. Khả năng duy trì điều khiển cần được phân tích và thử nghiệm, không được suy ra chỉ từ việc có hai nhánh.
 
 ### 5.3. Nội dung tiếp tục đặc tả
 
-Với từng nhóm trong phạm vi, cần hoàn thiện điều kiện warning/fault, trạng thái áp dụng, phản ứng và nguyên tắc phục hồi ở cấp hệ thống. Ngưỡng còn mở, timing, cách đo, thuật toán và phối hợp bảo vệ được cụ thể hóa trong Hardware/Software Specification; các phép thử và tiêu chí đạt được đưa vào Test Specification. Giới hạn chịu đựng phần cứng không được đồng nhất với giới hạn vận hành công bố.
+Hành vi warning/fault và kiểm tra khởi động/phục hồi đã chốt ở mức chức năng được mô tả tại mục 6. Ngưỡng còn mở, timing, cách đo, thuật toán và phối hợp bảo vệ được cụ thể hóa trong Hardware/Software Specification; các phép thử và tiêu chí đạt được đưa vào Test Specification. Giới hạn chịu đựng phần cứng không được đồng nhất với giới hạn vận hành công bố. Các mục còn TBD trong bảng 5.2 chưa được coi là khả năng bảo vệ đã được hiện thực hoặc kiểm chứng.
 
 ## 6. Trạng thái và hành vi hệ thống
 
@@ -154,17 +155,18 @@ Với từng nhóm trong phạm vi, cần hoàn thiện điều kiện warning/f
 
 ![System state diagram](diagrams/system-architecture-system-state-diagram.svg)
 
-**Ghi chú:** Đầu ra chỉ được phép ON trong RUNNING và WARNING. Xử lý lỗi phải ngắt có ưu tiên cao hơn các chuyển trạng thái khác. MCU reset từ bất kỳ trạng thái nào đều đưa hệ thống về INITIALIZING với đầu ra OFF.
+**Ghi chú:** Đầu ra chỉ được phép ON trong RUNNING và WARNING. Xử lý lỗi phải ngắt có ưu tiên cao hơn các chuyển trạng thái khác. MCU reset từ bất kỳ trạng thái nào đều đưa hệ thống về INITIALIZING với yêu cầu đầu ra OFF.
 
-`Start` là điểm bắt đầu của sơ đồ, không phải một trạng thái vận hành. CHECKING BEFORE ON và RECOVERING thể hiện các bước xử lý có giữ đầu ra OFF.
+`Start` là điểm bắt đầu, không phải trạng thái vận hành. Logic hiện tại gồm sáu trạng thái dưới đây, không có bước Enable Checks hoặc trạng thái Checking Before ON riêng. **Lưu ý đồng bộ bản vẽ:** nếu bản hình còn Checking Before ON thì trạng thái đó không còn áp dụng; bảng và mô tả dưới đây xác định logic hiện hành. Các file diagram được đồng bộ riêng.
 
-| Trạng thái | Đầu ra | Ý nghĩa |
+ON/OFF trong tên trạng thái và bảng dưới mô tả yêu cầu điều khiển đường công suất. OFF không đồng nghĩa V_load lập tức bằng 0 hoặc xác nhận switch đã ngắt vật lý thành công. Nếu switch hỏng ở trạng thái dẫn, giữ yêu cầu OFF không bảo đảm cô lập được tải; hệ thống ghi nhận bất thường theo tiêu chí giám sát, chưa chốt cơ chế cô lập bổ sung. HW_OCP có thể ngắt trước khi MCU cập nhật trạng thái.
+
+| Trạng thái | Yêu cầu đầu ra | Ý nghĩa |
 | --- | --- | --- |
 | INITIALIZING | OFF | Khởi tạo và kiểm tra ban đầu sau cấp nguồn/reset |
-| READY | OFF | Đủ điều kiện cho phép bật, chờ yêu cầu ON của người dùng |
-| CHECKING BEFORE ON | OFF | Kiểm tra lại điều kiện tại thời điểm nhận yêu cầu ON |
+| READY | OFF | Các điều kiện cho phép bật đang đạt, không có lỗi đang giữ; chờ yêu cầu ON |
 | RUNNING | ON | Cấp điện và giám sát tải bình thường |
-| WARNING | ON | Có cảnh báo nhưng chưa đạt điều kiện phải ngắt |
+| WARNING | ON | Còn ít nhất một cảnh báo nhưng chưa có lỗi phải ngắt |
 | FAULT | OFF | Giữ lỗi và chờ yêu cầu phục hồi thủ công |
 | RECOVERING | OFF | Kiểm tra phục hồi và xử lý xóa lỗi |
 
@@ -175,50 +177,89 @@ Với từng nhóm trong phạm vi, cần hoàn thiện điều kiện warning/f
 | Điểm bắt đầu hoặc bất kỳ trạng thái nào | Cấp nguồn/MCU reset | INITIALIZING |
 | INITIALIZING | Kiểm tra khởi động đạt | READY |
 | INITIALIZING | Kiểm tra khởi động thất bại | FAULT |
-| READY | Người dùng yêu cầu ON | CHECKING BEFORE ON |
+| READY | Người dùng yêu cầu ON, không đồng thời có lỗi phải ngắt | RUNNING |
 | READY | Phát hiện lỗi | FAULT |
-| CHECKING BEFORE ON | Kiểm tra cho phép bật đạt | RUNNING |
-| CHECKING BEFORE ON | Kiểm tra cho phép bật thất bại do điều kiện lỗi | FAULT |
 | RUNNING | Phát hiện cảnh báo | WARNING |
 | RUNNING | Phát hiện lỗi phải ngắt | FAULT |
-| WARNING | Hết cảnh báo và không có lỗi phải ngắt | RUNNING |
+| WARNING | Không còn bất kỳ cảnh báo nào và không có lỗi phải ngắt | RUNNING |
 | WARNING | Đạt điều kiện phải ngắt hoặc phát hiện lỗi | FAULT |
 | RUNNING hoặc WARNING | Người dùng yêu cầu OFF, không đồng thời có lỗi phải giữ | READY |
 | FAULT | Người dùng yêu cầu phục hồi | RECOVERING |
 | RECOVERING | Kiểm tra phục hồi đạt và lỗi đã được xóa thành công | READY |
 | RECOVERING | Kiểm tra hoặc xóa lỗi thất bại | FAULT |
 
-Nếu không có điều kiện chuyển hợp lệ, hệ thống giữ trạng thái hiện tại. Điều kiện cảnh báo kéo dài chỉ dẫn tới ngắt khi đạt tiêu chí tương ứng với loại lỗi/profile; không mặc định mọi cảnh báo có chung một timeout.
+Nếu không có điều kiện chuyển hợp lệ, hệ thống giữ trạng thái hiện tại. INITIALIZING chưa đủ thông tin để kết luận thì tiếp tục chờ với đầu ra OFF; giới hạn thời gian chờ cụ thể TBD.
+
+Label `Warning Cleared` trên diagram được hiểu là không còn bất kỳ warning nào đang áp dụng, không phải chỉ một warning vừa hết. `Shutdown Condition Met` là đạt tiêu chí ngắt bảo vệ, không bao gồm lệnh OFF bình thường của người dùng. Cảnh báo kéo dài chỉ dẫn tới ngắt khi đạt tiêu chí tương ứng với loại lỗi/profile; không mặc định mọi cảnh báo có chung một timeout.
 
 ### 6.3. Giám sát, khởi động và yêu cầu ON/OFF
 
-Khi nguồn điều khiển còn hoạt động, hệ thống tiếp tục giám sát V_in, V_load, I_load và trạng thái bảo vệ dù Power Switch ON hay OFF, đồng thời cung cấp trạng thái trên giao diện. Việc diễn giải thông tin đo phụ thuộc trạng thái switch.
+Khi nguồn điều khiển còn hoạt động, hệ thống tiếp tục giám sát V_in, V_load, I_load và trạng thái bảo vệ dù Power Switch ON hay OFF, đồng thời cung cấp trạng thái trên giao diện. Giám sát liên tục được hiểu là cập nhật định kỳ trong vận hành; chu kỳ cụ thể được đặc tả sau. Việc diễn giải thông tin đo phụ thuộc trạng thái switch.
 
-Kiểm tra khởi động đánh giá điều kiện nguồn, V_in, tính hợp lệ của thông tin đo/cấu hình và trạng thái lỗi phần cứng. Khi đạt, hệ thống vào READY với đầu ra OFF, chờ người dùng yêu cầu ON; không tự khôi phục trạng thái ON trước reset.
+Startup Checks xác nhận bốn điều kiện chức năng:
 
-Kiểm tra trước ON xác nhận lại điều kiện vận hành hiện tại và không có lỗi đang giữ. Chỉ khi đạt mới phát MCU_ENABLE. READY nghĩa là đủ điều kiện để thử cấp điện, chưa chứng minh tải không có sự cố. Profile có thể cho phép quá độ khởi động hợp lệ nhưng không được trì hoãn bảo vệ quá dòng nghiêm trọng.
+| Điều kiện | Ý nghĩa |
+| --- | --- |
+| Thông tin giám sát sẵn sàng và hợp lệ | Có thể sử dụng thông tin đo và trạng thái bảo vệ để đánh giá hệ thống |
+| Cấu hình vận hành hợp lệ | Cấu hình nguồn/profile sử dụng được và không vượt giới hạn sản phẩm |
+| V_in phù hợp cấu hình | Điện áp hiện tại nằm trong miền cho phép cấp điện của cấu hình |
+| Không có lỗi ngăn cấp điện | Không có điều kiện lỗi hoặc lỗi đang giữ, bao gồm lỗi HW_OCP, ngăn vào READY |
 
-Lệnh OFF của người dùng ngắt tải bình thường, không tự phát sinh FAULT và không xóa lỗi đang giữ. Lỗi do firmware hoặc hardware đều đưa hệ thống về OFF + FAULT. Với lỗi phần cứng, switch ngắt độc lập trước khi MCU tiếp nhận trạng thái và cập nhật giao diện.
+Thông tin đo hợp lệ không đồng nghĩa giá trị đo nằm trong miền bình thường: một phép đo hoạt động đúng vẫn có thể báo V_in quá thấp. Chưa đủ thông tin thì giữ INITIALIZING; tất cả điều kiện đạt thì vào READY; xác định lỗi hoặc khởi tạo thất bại thì vào FAULT và hiển thị nguyên nhân trong khả năng giao diện còn hoạt động. Thời gian chờ và cách xác định tính hợp lệ TBD. Khi OFF, V_load thấp và I_load gần 0 không tự là lỗi, cũng không chứng minh tải không ngắn mạch.
 
-### 6.4. Phục hồi và bật lại
+READY được duy trì bằng giám sát liên tục. Khi nhận ON trong READY, MCU phát MCU_ENABLE và chuyển RUNNING; không khởi tạo hay thực hiện một bước Enable Checks riêng. Nếu đồng thời phát hiện lỗi thì ưu tiên giữ OFF và vào FAULT. Người dùng không phải giữ nút ON để duy trì cấp điện. READY chỉ xác nhận điều kiện cho phép thử cấp điện, chưa chứng minh tải không có sự cố; HW_OCP vẫn phải sẵn sàng khi bật. Quá độ hợp lệ của profile không được trì hoãn bảo vệ quá dòng nghiêm trọng.
 
-1. Khi khởi động/reset, giữ Power Switch OFF cho đến khi có điều kiện và yêu cầu enable hợp lệ.
-2. Khi bảo vệ phần cứng phát hiện quá dòng nghiêm trọng, Fault Memory giữ lỗi và SHUTDOWN_REQUEST ngắt switch độc lập với MCU.
-3. MCU tiếp nhận OVERCURRENT_FAULT_STATUS, giữ MCU_ENABLE không hoạt động và hiển thị lỗi.
-4. Không tự động retry. Người dùng phải yêu cầu phục hồi.
-5. MCU giữ đầu ra OFF, thực hiện các kiểm tra phục hồi được định nghĩa và gửi CLEAR_FAULT_REQUEST khi hợp lệ.
-6. MCU xác nhận trạng thái lỗi đã được xóa, đưa hệ thống về READY với đầu ra vẫn OFF. Người dùng phải gửi yêu cầu ON riêng để cấp điện lại.
+Lệnh OFF của người dùng ngắt tải bình thường, không tự phát sinh FAULT và không xóa lỗi đang giữ. Các lỗi vận hành do firmware phát hiện và sự kiện HW_OCP đều đưa hệ thống về yêu cầu OFF + FAULT. Với HW_OCP, switch ngắt độc lập trước khi MCU tiếp nhận trạng thái và cập nhật giao diện. Không mặc định mọi sự kiện được xử lý bởi phần tử bảo vệ đầu vào đều được quan sát và latch thành FAULT trong MCU.
 
-Kiểm tra phục hồi quyết định có được xóa lỗi đang giữ hay không; kiểm tra trước ON quyết định có được cấp điện tại thời điểm nhận lệnh hay không. Hai bước có thể dùng chung kiểm tra điều kiện vận hành, nhưng phục hồi có thêm xử lý nguyên nhân lỗi và xóa trạng thái lỗi. Điều kiện phải được kiểm tra lại trước ON vì chúng có thể thay đổi sau khi phục hồi.
+### 6.4. Warning, fault và tổng hợp nhiều nguyên nhân
 
-Khi tải đã ngắt, `I_load ≈ 0` không đủ chứng minh ngắn mạch đã được loại bỏ. Tiêu chí phục hồi, cách kiểm tra lỗi còn tồn tại và phản ứng nếu lỗi tái xuất hiện phải được xác định trước khi triển khai; không mặc định có thể kiểm tra mọi lỗi chỉ bằng phép đo khi OFF.
+- **Warning condition:** điều kiện cần thông báo và theo dõi nhưng chưa bắt buộc ngắt; khi đang cấp điện, hệ thống tiếp tục yêu cầu ON trong WARNING.
+- **Fault condition:** điều kiện ngăn cấp điện hoặc yêu cầu ngắt nếu đang ON; nguyên nhân được ghi nhận và hệ thống giữ FAULT đến khi phục hồi hợp lệ. Điều kiện gây lỗi có thể đã hết nhưng trạng thái lỗi đã lưu vẫn còn.
+- **Shutdown condition:** tiêu chí ngắt bảo vệ. Khi cảnh báo đạt tiêu chí này thì xác lập fault; fault nghiêm trọng có thể xuất hiện trực tiếp, không cần đi qua WARNING.
+
+| Nhóm điều kiện | Warning | Fault hoặc phản ứng khác |
+| --- | --- | --- |
+| V_in | Gần giới hạn thấp/cao nhưng vẫn trong miền cho phép cấp điện | Đạt tiêu chí thấp áp/quá áp thì giữ/yêu cầu OFF và FAULT; áp trở lại bình thường không tự xóa lỗi |
+| I_load do MCU đánh giá | Đạt tiêu chí cảnh báo quá tải, chưa đạt tiêu chí ngắt | Đạt tiêu chí ngắt của cấu hình/profile thì yêu cầu OFF và giữ FAULT; dòng về 0 sau ngắt không tự xóa lỗi. Quá độ hợp lệ không tự là warning |
+| V_drop khi ON | Sụt áp đạt tiêu chí cảnh báo sau khi xét quá độ hợp lệ | Đạt tiêu chí ngắt thì yêu cầu OFF và giữ FAULT; báo sụt áp bất thường, không tự khẳng định phần tử gây lỗi |
+| V_load khi OFF | Điện áp dư hợp lệ được theo dõi/hiển thị, không tự chuyển sang WARNING vốn là trạng thái cho phép ON | Đạt tiêu chí đầu ra không phù hợp OFF thì ghi nhận lỗi, giữ yêu cầu OFF và vào FAULT; chỉ còn điện chưa đủ chứng minh lỗi |
+| Quá dòng nghiêm trọng | Không cần có warning trước | HW_OCP ngắt và giữ lỗi độc lập firmware, báo trạng thái để MCU ghi nhận FAULT |
+
+V_drop được tính từ V_in − V_load, không cần thêm cảm biến. Chỉ đánh giá sụt áp đường dẫn khi ON, thông tin đo và đầu vào hợp lệ, đã xét quá độ cho phép. V_in và V_load cùng thấp nhưng chênh lệch nhỏ được xem xét qua điều kiện nguồn; V_in bình thường nhưng V_load thấp đáng kể được đánh giá qua V_drop. Không tạo thêm một lỗi thấp V_load trùng ý nghĩa với sụt áp này. Các baseline hiệu năng 0,2 V tại 1 A và 0,4 V tại 2 A không tự là ngưỡng warning/fault; ngưỡng chẩn đoán còn xét sai số hai kênh đo, dòng và timing.
+
+Khi OFF, cho phép V_load giảm theo đặc tính xả của tải; không bắt buộc bằng 0 tức thời và chưa yêu cầu mạch chủ động xả tụ. Tiêu chí bất thường phải xét điện áp, thời gian và đặc tính tải; không suy ra chính xác switch hỏng, dòng rò hay nguồn cấp ngược chỉ từ V_load. Những khả năng ngoài giới hạn đo/miền bảo vệ phần cứng vẫn giữ phạm vi và TBD tại mục 5.2.
+
+Lỗi phải ngắt và lỗi đang giữ chưa được phục hồi ưu tiên hơn warning hoặc lệnh ON. Khi không có fault và đang cấp điện, còn ít nhất một warning thì giữ WARNING; chỉ khi không còn warning nào mới về RUNNING. Ghi nhận và xóa từng nguyên nhân riêng: hết warning V_in không xóa warning V_drop còn tồn tại. Lệnh OFF vẫn được chấp nhận khi WARNING, nhưng không xóa lỗi đang giữ; nếu đồng thời có lỗi phải ngắt thì vào FAULT.
+
+### 6.5. Phục hồi và bật lại
+
+Không tự động retry. Chỉ khi người dùng yêu cầu phục hồi, hệ thống mới vào RECOVERING và vẫn giữ MCU_ENABLE không hoạt động.
+
+Recovery Checks gồm:
+
+1. **Điều kiện chung:** thông tin giám sát sẵn sàng/hợp lệ, cấu hình hợp lệ và V_in trong miền cho phép.
+2. **Điều kiện theo nguyên nhân:** lỗi kiểm tra được khi OFF đã hết và không có lỗi khác ngăn phục hồi. Điều kiện kiểm tra phụ thuộc nguyên nhân, không chỉ phụ thuộc khối phát hiện.
+3. **Xóa và xác nhận tại nơi giữ lỗi:** firmware hoặc Fault Memory của HW_OCP, theo bảng dưới.
+
+| Lỗi đã ghi nhận | Kiểm tra và xử lý phục hồi |
+| --- | --- |
+| Lỗi do MCU | Kiểm tra theo nguyên nhân; khi hợp lệ, xóa lỗi firmware. Không bắt buộc gửi clear tới HW_OCP nếu khối đó không giữ lỗi |
+| Lỗi HW_OCP | Sau khi điều kiện phục hồi đạt, tiếp tục giữ MCU_ENABLE không hoạt động, gửi CLEAR_FAULT_REQUEST và xác nhận OVERCURRENT_FAULT_STATUS không còn báo lỗi; xử lý ghi nhận lỗi tương ứng trong MCU |
+| Nhiều lỗi đồng thời | Chỉ về READY khi mọi lỗi ngăn phục hồi đã được xử lý; xóa một nguyên nhân không tự xóa các nguyên nhân khác |
+
+Không yêu cầu trạng thái lỗi đã lưu phải bằng 0 trước khi gửi clear: cần phân biệt điều kiện gây lỗi với trạng thái Fault Memory đang giữ. Fault Priority vẫn áp dụng nếu điều kiện phát hiện lỗi và clear đồng thời tồn tại.
+
+Kiểm tra hoặc xóa lỗi thất bại thì về FAULT, giữ yêu cầu OFF và hiển thị lý do. Chỉ khi kiểm tra phục hồi đạt và lỗi đã được xóa thành công mới về READY; đầu ra vẫn OFF, người dùng phải gửi ON riêng. Khả năng READY được duy trì bằng giám sát hiện tại, không phải một giấy phép bật có hiệu lực bất kể điều kiện thay đổi.
+
+Với lỗi V_in, có thể kiểm tra nguồn đã trở lại miền cho phép khi OFF. Với quá tải/ngắn mạch, I_load gần 0 sau ngắt không chứng minh tải đã hết sự cố; người dùng cần xử lý nguyên nhân trước khi yêu cầu phục hồi. Clear HW_OCP thành công chỉ xác nhận khóa lỗi đã được giải phóng. Nếu sự cố tái xuất hiện khi ON, các đường bảo vệ phải tiếp tục tác động. Tiêu chí theo từng lỗi, thời gian chờ và cách xác nhận cụ thể vẫn TBD; không giả định có thể kiểm tra mọi lỗi chỉ bằng phép đo khi OFF.
 
 ## 7. Các điểm cần hoàn thiện
 
 - Sơ đồ tổng thể ghi `V_Ctrl_5V → MCU`: cần xác định khối MCU là module nhận 5 V hay chip dùng rail 3.3 V; chưa coi đây là quyết định cấp 5 V trực tiếp cho chip.
 - Sửa lỗi chữ `Dectection` trong diagram bảo vệ và thống nhất tên tín hiệu giữa diagram tổng thể, diagram con và bảng interface.
 - Chốt phần cứng, phương pháp sensing, dạng interface, mức logic, ngưỡng bảo vệ và timing ở đặc tả thành phần.
-- Xác định tiêu chí phục hồi và hành vi khi nguồn nội bộ mất/sụt; trạng thái latch sau mất nguồn vẫn TBD, yêu cầu đầu ra mặc định OFF giữ nguyên.
+- Cụ thể hóa ngưỡng, timing, hysteresis, tính hợp lệ của thông tin đo và tiêu chí phục hồi theo từng lỗi trên nền hành vi đã chốt tại mục 6; không bổ sung lại bước Enable Checks riêng.
+- Xác định hành vi chi tiết khi nguồn nội bộ mất/sụt và trạng thái latch sau mất nguồn; yêu cầu đầu ra mặc định OFF giữ nguyên.
 - Chưa chốt việc bổ sung yêu cầu từ MCU để latch phần cứng giữ mọi lỗi firmware; không bổ sung interface này trong kiến trúc hiện tại.
 - Đối chiếu vị trí đo V_in và các quyết định kiến trúc với Product Requirements trước khi chốt bản đặc tả để triển khai.
 
