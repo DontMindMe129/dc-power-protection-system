@@ -1,320 +1,214 @@
 # Yêu cầu sản phẩm
 
-> Phiên bản: 0.1
+> Phiên bản: 2
 >
-> Giai đoạn: Xác định sản phẩm
+> Cập nhật: 2026-11-05
 >
-> Trạng thái: Bản cơ sở đang được hoàn thiện
+> Trạng thái: Đồng bộ theo Requirement v2; các mục tiêu thiết kế chưa phải kết quả kiểm chứng trên sản phẩm.
 
-Tài liệu này mô tả sản phẩm phải làm gì và các ràng buộc có thể quan sát từ bên ngoài hệ thống. Tài liệu chưa quyết định MCU, cảm biến, MOSFET, mạch khuếch đại, thuật toán chi tiết hoặc cách bố trí PCB.
-
-Các trạng thái được sử dụng trong tài liệu:
-
-- **Đã xác nhận:** đã được chọn làm yêu cầu hiện tại;
-- **Tạm thời:** giá trị định hướng để tiếp tục thiết kế, có thể thay đổi sau khi tính toán hoặc thử nghiệm;
-- **TBD:** chưa đủ thông tin để đề xuất hoặc chốt giá trị.
+Tài liệu mô tả yêu cầu cấp sản phẩm. Các quyết định thiết kế chi tiết được quản lý trong [Concept](concept.md) và [Design Specification](design-specification.md); hai tài liệu này cần được đồng bộ riêng theo bộ yêu cầu phiên bản này.
 
 ## 1. Tên sản phẩm
 
-- Tiếng Việt: **Hệ thống giám sát và bảo vệ đường nguồn DC**.
-- Tiếng Anh: **DC Power Path Monitoring and Protection System**.
+Hệ thống giám sát và bảo vệ đường nguồn DC (DC Power Path Monitoring and Protection System).
 
-## 2. Mục đích
+## 2. Mục đích và phạm vi sử dụng
 
-Thiết bị được mắc giữa nguồn DC bên ngoài và tải DC nhằm giám sát điện áp đầu vào, điện áp tại tải và dòng điện trên đường công suất. Dựa trên các đại lượng đo được, thiết bị phát hiện trạng thái nguồn bất thường, sụt áp quá mức hoặc quá dòng tải; cung cấp thông tin, cảnh báo cho người dùng và tự động ngắt tải khi cần thiết theo cấu hình vận hành đã chọn.
+Hệ thống được mắc giữa nguồn DC và tải để đo điện áp đầu vào, điện áp tại tải và dòng điện cấp cho tải. Từ các giá trị đo và cấu hình do người dùng lựa chọn, hệ thống cảnh báo khi có bất thường và tự động ngắt cấp điện khi đạt điều kiện bảo vệ. Các giá trị đo, trạng thái hoạt động và nguyên nhân ngắt được hiển thị để người dùng theo dõi và xử lý.
 
-Thiết bị chỉ thực hiện chức năng giám sát và bảo vệ; không điều chỉnh điện áp đầu ra và không thay thế nguồn DC bên ngoài.
+Thiết bị được sử dụng với nguồn DC trong khoảng 5–15 V và tải nằm trong giới hạn dòng điện cho phép của thiết bị. Thiết bị chỉ thực hiện chức năng giám sát và đóng/ngắt đường cấp điện, không chịu trách nhiệm điều chỉnh điện áp và dòng cấp cho tải.
 
 ## 3. Đầu vào và đầu ra
 
-### 3.1. Đầu vào
+Mã nhóm: PR-IO-XX (Product Requirement – Input/Output)
 
-- **PR-IO-01 — Đầu vào công suất:** năng lượng điện do nguồn DC bên ngoài cung cấp.
-- **PR-IO-02 — Đầu vào thông tin:** lệnh vận hành và các tham số cấu hình do người dùng cung cấp, bao gồm cấu hình nguồn, đặc tính điện của tải được lưu trong profile tải, ngưỡng cảnh báo, ngưỡng ngắt và thời gian cho phép. Các giá trị cấu hình phải nằm trong miền vận hành định mức của thiết bị.
+| Mã | Tên | Nội dung |
+| --- | --- | --- |
+| PR-IO-01 | Đầu vào công suất | Nguồn DC cấp vào thiết bị |
+| PR-IO-02 | Đầu vào thông tin | Lệnh bật/tắt đầu ra, yêu cầu phục hồi sau ngắt bảo vệ và các thông số cấu hình vận hành do người dùng thiết lập |
+| PR-IO-03 | Đầu ra công suất | Đường cấp điện tới tải có thể đóng/ngắt |
+| PR-IO-04 | Đầu ra thông tin | Giá trị đo, trạng thái, cảnh báo và nguyên nhân ngắt |
 
-### 3.2. Đầu ra
+Các thông số cấu hình vận hành bao gồm:
 
-- **PR-IO-03 — Đầu ra công suất:** năng lượng DC được truyền từ nguồn đến tải dưới sự giám sát và có khả năng đóng hoặc ngắt để bảo vệ đường công suất. Điện áp đầu ra `V_load` không được điều chỉnh mà bám theo `V_in`, trừ phần sụt áp trên thiết bị.
-- **PR-IO-04 — Đầu ra thông tin:** các giá trị đo, trạng thái vận hành, cảnh báo và nguyên nhân ngắt bảo vệ của hệ thống.
-
-### 3.3. Quan hệ công suất và biên hệ thống
-
-```text
-Khi đường công suất đóng: V_load ≈ V_in − V_drop
-Khi đường công suất ngắt: thiết bị không chủ động truyền năng lượng từ nguồn đến tải
-```
-
-Nguồn và tải là các đối tượng bên ngoài hệ thống. Hành vi điện của tải ảnh hưởng tới `V_load` và `I_load`, nhưng profile tải là đầu vào thông tin do người dùng chọn chứ không phải tải vật lý.
+| Nhóm | Thông số | Đơn vị | Ý nghĩa |
+| --- | --- | --- | --- |
+| Điện áp đầu vào | Ngưỡng cảnh báo điện áp thấp | V | Cảnh báo khi `V_in` giảm đến ngưỡng này. |
+|  | Ngưỡng ngắt điện áp thấp | V | Ngắt khi `V_in` đạt điều kiện thấp áp. |
+|  | Ngưỡng cảnh báo điện áp cao | V | Cảnh báo khi `V_in` tăng đến ngưỡng này. |
+|  | Ngưỡng ngắt điện áp cao | V | Ngắt khi `V_in` đạt điều kiện quá áp. |
+|  | Thời gian cho phép thấp áp trong vùng cảnh báo | ms hoặc s | Thời gian tối đa `V_in` được phép liên tục nằm trong vùng cảnh báo thấp áp trước khi ngắt. |
+|  | Thời gian cho phép quá áp trong vùng cảnh báo | ms hoặc s | Thời gian tối đa `V_in` được phép liên tục nằm trong vùng cảnh báo quá áp trước khi ngắt. |
+| Dòng tải | Ngưỡng cảnh báo dòng cao | A | Cảnh báo và bắt đầu tính thời gian cho phép khi `I_load` vượt ngưỡng này. |
+|  | Ngưỡng ngắt quá dòng | A | Phần mềm yêu cầu ngắt khi phát hiện `I_load` vượt ngưỡng này, không chờ hết thời gian cho phép trong vùng cảnh báo. |
+|  | Thời gian cho phép dòng cao trong vùng cảnh báo | ms hoặc s | Thời gian tối đa `I_load` được phép liên tục ở vùng cảnh báo dòng cao trước khi ngắt. |
+| Sụt áp đường công suất | Ngưỡng cảnh báo sụt áp | V | Cảnh báo khi `V_drop` = `V_in` − `V_load` đạt ngưỡng này trong lúc đầu ra bật. |
+|  | Ngưỡng ngắt do sụt áp | V | Ngắt khi sụt áp đường công suất đạt điều kiện bảo vệ trong lúc đầu ra bật. |
 
 ## 4. Trường hợp sử dụng
 
+Mã nhóm: UC-XX (Use Case)
+
 ### UC-01 — Thiết lập hệ thống
 
-Người dùng kết nối nguồn DC và tải tương thích, sau đó lựa chọn hoặc nhập cấu hình nguồn, profile tải và các ngưỡng được phép thay đổi. Hệ thống phải kiểm tra cấu hình có nằm trong miền vận hành định mức hay không. Trong quá trình thiết lập, đầu ra công suất được giữ ở trạng thái OFF.
+Khi người dùng kết nối nguồn DC, tải tiêu thụ và thiết lập các thông số cấu hình vận hành, hệ thống kiểm tra cấu hình và giữ đầu ra ở trạng thái tắt. Nếu cấu hình hợp lệ, hệ thống cho phép người dùng bật đầu ra. Nếu cấu hình không hợp lệ, hệ thống không áp dụng cấu hình đó.
 
-### UC-02 — Cấp điện và giám sát tải bình thường
+### UC-02 — Cấp điện và giám sát tải
 
-Sau cấp nguồn/reset, hệ thống kiểm tra khởi động và giữ đầu ra OFF. Chỉ cho phép vào READY khi không có lỗi đang xảy ra và không còn lỗi nào đang được giữ lại, kể cả lỗi từ HW_OCP; các điều kiện khởi động khác cũng phải đạt. Khi đạt điều kiện, hệ thống vào READY và chờ người dùng yêu cầu ON. Trong READY, các điều kiện cho phép bật được duy trì bằng giám sát liên tục; lệnh ON cho phép đóng đường công suất, không có bước Enable Checks riêng. Lỗi phải ngắt được ưu tiên nếu xuất hiện đồng thời với lệnh ON. Hệ thống đo và hiển thị `V_in`, `V_load`, `I_load` khi nguồn điều khiển còn hoạt động, dù đầu ra ON hay OFF; cách đánh giá phụ thuộc trạng thái switch. Chính sách giữ lỗi qua reset/mất nguồn được quy định tại FR-10.
+Khi người dùng yêu cầu bật đầu ra, hệ thống kiểm tra điều kiện cấp điện. Nếu đủ điều kiện, hệ thống đóng đường công suất, đo và hiển thị điện áp đầu vào, điện áp tại tải và dòng tải. Tải được cấp điện và giám sát. Nếu không đáp ứng điều kiện cấp điện, đầu ra giữ tắt và hệ thống thông báo lý do.
 
-### UC-03 — Tải có dòng khởi động
+### UC-03 — Tải có dòng tăng cao ngắn hạn
 
-Khi tải được bật, dòng điện có thể tạm thời cao hơn dòng hoạt động bình thường. Hệ thống sử dụng profile tải để quyết định mức dòng và thời gian được chấp nhận. Nếu dòng trở về mức bình thường trong thời gian cho phép, hệ thống tiếp tục cấp điện và không ngắt nhầm tải.
+Khi dòng tải tăng cao trong thời gian ngắn lúc bật tải, hệ thống so sánh mức dòng và thời gian tồn tại với giới hạn của cấu hình đã chọn. Hệ thống tiếp tục cấp điện nếu dòng khởi động nằm trong giới hạn cho phép và ngắt bảo vệ nếu đạt điều kiện ngắt.
 
-### UC-04 — Phát hiện điều kiện bất thường
+### UC-04 — Cảnh báo bất thường
 
-Hệ thống phải quan sát các tình trạng như:
-
-- `V_in` nằm ngoài miền của cấu hình nguồn;
-- `I_load` vượt miền vận hành bình thường;
-- `V_drop = V_in − V_load` quá lớn;
-- `V_load` không phù hợp với trạng thái đóng hoặc ngắt mong đợi.
-
-Nếu tình trạng chưa gây nguy hiểm tức thời, hệ thống cảnh báo và cung cấp thông tin giúp người dùng đánh giá vấn đề có thể đến từ nguồn, tải hoặc đường công suất. Kết quả chẩn đoán chỉ là gợi ý nếu các phép đo hiện có chưa đủ để kết luận tuyệt đối.
+Khi điện áp đầu vào, dòng tải hoặc sụt áp trên đường công suất đạt điều kiện cảnh báo nhưng chưa đạt điều kiện ngắt, hệ thống hiển thị cảnh báo và tiếp tục giám sát các giá trị đo. Người dùng nhận biết bất thường và tải tiếp tục được cấp điện khi chưa đạt điều kiện ngắt.
 
 ### UC-05 — Ngắt bảo vệ
 
-Khi xảy ra tình trạng nguy hiểm, chẳng hạn quá dòng nghiêm trọng hoặc ngắn mạch, hệ thống phải nhanh chóng ngắt đường cấp điện tới tải. Sau khi ngắt, hệ thống phải:
-
-- duy trì công tắc công suất ở trạng thái ngắt;
-- không chủ động truyền năng lượng từ nguồn đến tải;
-- không tự động đóng lại khi chưa thỏa mãn chính sách phục hồi;
-- hiển thị trạng thái và nguyên nhân gây ngắt.
-
-Yêu cầu này không đồng nghĩa với việc bảo đảm `V_load = 0 V` ngay lập tức vì phía tải có thể còn điện tích, dòng rò hoặc nguồn cấp ngược.
+Khi phát hiện điều kiện cần ngắt bảo vệ, hệ thống ngắt đường cấp điện từ nguồn đến tải, ghi nhận và hiển thị nguyên nhân ngắt. Đầu ra được giữ ở trạng thái tắt để chờ phục hồi.
 
 ### UC-06 — Phục hồi sau lỗi
 
-Người dùng xử lý nguyên nhân lỗi và yêu cầu phục hồi thủ công; hệ thống không tự động retry. Hệ thống giữ yêu cầu đầu ra OFF, kiểm tra điều kiện chung và điều kiện theo nguyên nhân, rồi xóa và xác nhận lỗi tại firmware/HW_OCP khi hợp lệ. Thành công thì về READY với đầu ra vẫn OFF, chờ lệnh ON riêng; thất bại thì giữ FAULT và hiển thị lý do. Không coi dòng bằng 0 khi OFF là bằng chứng tải đã hết ngắn mạch. Tiêu chí định lượng và thời gian chờ cụ thể vẫn TBD.
-
-Luồng phục hồi này áp dụng cho lỗi đang được giữ trong phiên vận hành; sau reset/mất nguồn áp dụng chính sách FR-10, không mặc định mọi lỗi được nhớ xuyên khởi động lại.
+Sau khi xử lý nguyên nhân lỗi, người dùng yêu cầu phục hồi. Hệ thống kiểm tra các điều kiện phục hồi. Nếu đủ điều kiện, hệ thống cho phép người dùng bật lại đầu ra. Nếu chưa đủ điều kiện, hệ thống tiếp tục giữ đầu ra tắt và thông báo lý do.
 
 ### UC-07 — Thay đổi nguồn hoặc tải
 
-Khi chuyển sang nguồn hoặc tải khác, người dùng chọn lại cấu hình tương ứng. Hệ thống chỉ chấp nhận cấu hình nằm trong miền vận hành định mức và sử dụng cấu hình mới cho các quyết định cảnh báo, cho phép hoạt động và ngắt bảo vệ.
+Khi người dùng tắt đầu ra, thay đổi nguồn hoặc tải và chọn lại cấu hình tương ứng, hệ thống kiểm tra cấu hình mới và các điều kiện cho phép cấp điện. Cấu hình hợp lệ được áp dụng. Đầu ra vẫn tắt và chờ lệnh bật của người dùng.
 
 ## 5. Yêu cầu chức năng
 
-### FR-01 — Điều khiển đường công suất
+Mã nhóm: FR-XX (Functional Requirement)
 
-Hệ thống phải có khả năng cho phép hoặc ngăn năng lượng truyền từ nguồn DC đến tải theo lệnh vận hành và trạng thái bảo vệ.
+| Mã | Chức năng | Nội dung yêu cầu |
+| --- | --- | --- |
+| FR-01 | Thiết lập cấu hình | Cho phép người dùng thiết lập các thông số cấu hình vận hành khi đầu ra đang tắt. Chỉ áp dụng khi các thông số nằm trong giới hạn chung của thiết bị và không mâu thuẫn với nhau. Nếu không hợp lệ, giữ nguyên cấu hình đang dùng và thông báo lý do. |
+| FR-02 | Bật/tắt đầu ra | Cho phép bật/tắt đầu ra theo lệnh người dùng. Chỉ bật khi đã áp dụng cấu hình hợp lệ, `V_in` nằm trong khoảng cho phép của cấu hình đó và không còn lỗi đang được giữ sau ngắt bảo vệ. Nếu chưa đáp ứng, giữ đầu ra tắt và thông báo lý do. Cho phép người dùng yêu cầu tắt trong quá trình hoạt động. |
+| FR-03 | Đo điện áp đầu vào | Đo điện áp `V_in` tại đầu nối nguồn vào để theo dõi nguồn DC cấp cho thiết bị. |
+| FR-04 | Đo điện áp tại tải | Đo điện áp `V_load` tại đầu nối tải ra khi đầu ra đang bật và khi đã tắt. |
+| FR-05 | Đo dòng tải | Đo dòng điện `I_load` cấp cho tải. Giá trị đo không bao gồm dòng cấp cho nhánh điều khiển. |
+| FR-06 | Hiển thị thông tin vận hành | Cập nhật điện áp đầu vào, điện áp tại tải, dòng tải, cảnh báo và trạng thái bật/tắt đầu ra trên giao diện để người dùng theo dõi. |
+| FR-07 | Đánh giá điều kiện vận hành | Đánh giá `V_in`, `I_load`, sụt áp `V_drop` = `V_in` − `V_load` và thời gian tồn tại của các điều kiện bất thường theo cấu hình đang áp dụng để xác định miền vận hành hiện tại của hệ thống. Chỉ đánh giá sụt áp đường công suất khi đầu ra bật. |
+| FR-08 | Cảnh báo | Hiển thị đại lượng đang có giá trị trong miền cảnh báo theo kết quả đánh giá ở FR-07. Tiếp tục cấp điện và giám sát khi chưa đạt điều kiện ngắt. Xóa cảnh báo tương ứng khi điều kiện cảnh báo đó không còn. |
+| FR-09 | Ngắt bảo vệ | Ngắt cấp điện cho tải khi một trong các đại lượng đạt điều kiện ngắt về mức hoặc thời gian. |
+| FR-10 | Giữ trạng thái sau lỗi | Sau ngắt bảo vệ, giữ đầu ra tắt, ghi nhận nguyên nhân và chờ người dùng yêu cầu phục hồi. Đồng thời hiển thị trạng thái và nguyên nhân ngắt khi khối điều khiển còn được cấp nguồn. |
+| FR-11 | Phục hồi sau lỗi | Khi nhận yêu cầu phục hồi, kiểm tra các điều kiện tương ứng với nguyên nhân ngắt theo cấu hình đang áp dụng. Nếu đạt, xóa trạng thái lỗi và giữ đầu ra tắt, chờ lệnh bật riêng. Nếu chưa đạt, tiếp tục giữ lỗi, giữ đầu ra tắt và thông báo lý do. |
 
-### FR-02 — Đo điện áp đầu vào
+### 5.1. Các miền vận hành
 
-Hệ thống phải đo `V_in` tại đầu nối nguồn vào của PCB, trước Input Protection, để xác định trạng thái điện áp nguồn ngoài tại đầu vào thiết bị. Đầu vào đo phải được bảo vệ phù hợp mà vẫn duy trì khả năng đo/phát hiện điện áp trong miền yêu cầu; miền sự cố chịu được cụ thể là TBD.
+**Bình thường:** Chưa có điều kiện cảnh báo hoặc ngắt về điện áp đầu vào, dòng tải và sụt áp theo cấu hình đang áp dụng. Sụt áp đường công suất chỉ được xét khi đầu ra bật.
 
-### FR-03 — Đo điện áp tại tải
+**Cảnh báo:** `V_in` nằm trong vùng cảnh báo thấp áp/quá áp nhưng chưa hết thời gian cho phép tương ứng; hoặc sụt áp đạt ngưỡng cảnh báo nhưng chưa đạt ngưỡng ngắt; hoặc `I_load` vượt ngưỡng cảnh báo dòng cao nhưng chưa vượt ngưỡng ngắt quá dòng và chưa hết thời gian cho phép. Chỉ xác định miền cảnh báo khi chưa có điều kiện ngắt.
 
-Hệ thống phải đo `V_load` tại đầu nối tải ra của PCB, sau Power Switch, khi đường công suất đang đóng và khi đã bị ngắt.
+**Ngắt:** Chỉ cần có một trong các điều kiện sau: `V_in` đạt ngưỡng ngắt thấp áp/quá áp; `V_in` liên tục ở vùng cảnh báo thấp áp/quá áp đến hết thời gian cho phép; sụt áp đạt ngưỡng ngắt khi đầu ra bật; `I_load` vượt ngưỡng ngắt quá dòng hoặc liên tục ở vùng cảnh báo dòng cao đến hết thời gian cho phép; hoặc bảo vệ quá dòng nhanh bằng phần cứng tác động. Miền ngắt được ưu tiên khi đồng thời có cảnh báo.
 
-### FR-04 — Đo dòng tải
-
-Hệ thống phải đo `I_load` chạy trên đường công suất từ nguồn đến tải. Giá trị này không bao gồm dòng tự tiêu thụ của hệ thống.
-
-### FR-05 — Đánh giá trạng thái đường công suất
-
-Hệ thống phải:
-
-- so sánh `V_in`, `V_load` và `I_load` với cấu hình vận hành;
-- xác định `V_drop = V_in − V_load`;
-- phân biệt trạng thái bình thường, cảnh báo và lỗi;
-- phát hiện điện áp đầu ra không phù hợp với trạng thái đóng hoặc ngắt mong đợi.
-
-Khi ON, hệ thống đánh giá sụt áp qua `V_drop` sau khi xét quá độ hợp lệ; khi OFF, cho phép điện áp dư theo đặc tính tải và chỉ xác định lỗi đầu ra khi đạt tiêu chí bất thường. Không tự kết luận switch hỏng chỉ từ `V_load`, chưa yêu cầu mạch chủ động xả tụ. Ngưỡng và thời gian chẩn đoán cụ thể vẫn TBD.
-
-### FR-06 — Quản lý cấu hình vận hành
-
-Hệ thống phải hỗ trợ cấu hình nguồn và ba profile tải hiện tại: `RESISTIVE`, `ELECTRONIC` và `FAN`. Mỗi profile có thể xác định ngưỡng cảnh báo, ngưỡng ngắt và khoảng thời gian cho phép đối với hiện tượng quá độ. Khả năng bổ sung profile `CUSTOM` hiện là TBD.
-
-Mỗi lần cấp nguồn hoặc MCU reset, hệ thống phải nạp bộ cấu hình mặc định do nhóm xác định và kiểm tra tính hợp lệ trước khi sử dụng. Phiên bản hiện tại không yêu cầu nhớ hoặc khôi phục cấu hình người dùng của lần vận hành trước. Giá trị mặc định cụ thể của cấu hình nguồn, profile và các tham số vẫn TBD. Cấu hình mặc định nằm trong giới hạn sản phẩm không đồng nghĩa phù hợp với mọi nguồn/tải đang kết nối; người dùng kiểm tra và điều chỉnh theo UC-01 trước khi yêu cầu ON. Nạp cấu hình không tự bật đầu ra; chính sách khởi động và lệnh ON riêng vẫn giữ nguyên.
-
-Bộ cấu hình mặc định là các giá trị ban đầu do nhóm xác định, không bị ghi đè bởi thao tác chỉnh cấu hình thông thường của người dùng. Người dùng thay đổi cấu hình vận hành hiện tại; sau cấp nguồn/reset, hệ thống nạp lại mặc định theo nguyên tắc trên.
-
-Chỉ cho phép áp dụng thay đổi cấu hình trong READY hoặc FAULT.
-
-Với mỗi thông số cấu hình, giới hạn vận hành được áp dụng là giá trị nghiêm ngặt nhất trong các giới hạn của sản phẩm, nguồn đang chọn và profile tải đang chọn. Hệ thống phải từ chối mọi giá trị cấu hình nằm ngoài giới hạn đó và thông báo lý do cho người dùng.
-
-Cấu hình người dùng chỉnh/chọn là cấu hình đề nghị, chỉ được thay thế cấu hình đang áp dụng sau khi toàn bộ cấu hình đề nghị được kiểm tra và chấp nhận. Nếu không hợp lệ, hệ thống từ chối cấu hình đề nghị, thông báo lý do và giữ nguyên cấu hình hợp lệ đang áp dụng; không tự chuyển FAULT chỉ vì thao tác nhập/chọn không hợp lệ. Nếu đang dùng mặc định thì giữ mặc định; nếu đã áp dụng một bộ khác hợp lệ thì giữ bộ đó, không tự quay về mặc định. Khi đầu ra đang OFF, việc từ chối giữ đầu ra OFF và không chặn lệnh ON sau đó bằng cấu hình đang áp dụng, miễn hệ thống đang READY và không có lỗi ngăn cấp điện. Chấp nhận hay từ chối cấu hình không tự bật tải hoặc xóa lỗi đang giữ; lỗi thực sự nếu xuất hiện vẫn được xử lý theo chính sách bảo vệ.
-
-Trong RUNNING hoặc WARNING, hệ thống phải từ chối yêu cầu đổi cấu hình nguồn, profile hoặc ngưỡng bảo vệ và thông báo cần tắt đầu ra trước. Giữ nguyên cấu hình đang áp dụng và tiếp tục giám sát/bảo vệ; không tự ngắt tải hoặc tạo FAULT chỉ vì yêu cầu đổi cấu hình. Để thay đổi, người dùng yêu cầu OFF và khi hệ thống về READY thì được chỉnh/chọn cấu hình mới theo quy tắc kiểm tra trên. Sau khi áp dụng, đầu ra vẫn OFF; chỉ được ON khi hệ thống đáp ứng điều kiện READY và có lệnh ON riêng.
-
-Trong FAULT, người dùng được chỉnh/chọn và đề nghị áp dụng cấu hình mới. Cấu hình không hợp lệ bị từ chối, giữ cấu hình đang áp dụng; cấu hình hợp lệ được áp dụng nhưng hệ thống vẫn giữ FAULT và yêu cầu đầu ra OFF. Đổi cấu hình không tự xóa lỗi firmware hoặc gửi yêu cầu clear HW_OCP. Người dùng phải yêu cầu phục hồi riêng; kiểm tra theo cấu hình đang áp dụng và nguyên nhân lỗi, xóa và xác nhận lỗi thành công theo FR-11 thì mới về READY, vẫn OFF và chờ lệnh ON riêng.
-
-Cấu hình hợp lệ chỉ xác nhận bộ tham số đáp ứng các ràng buộc cấu hình, không bảo đảm phù hợp với nguồn/tải thực tế. Một bộ cấu hình hợp lệ nhưng chọn không phù hợp có thể khiến điều kiện đo đạt tiêu chí fault; khác với cấu hình không hợp lệ vốn bị từ chối trước khi áp dụng. Hệ thống đánh giá theo thông tin đo và tham số đang áp dụng, không tự nhận biết người dùng đã chọn nhầm loại nguồn hoặc profile.
-
-Khả năng cấp dòng khai báo của nguồn là ngân sách cho toàn thiết bị, không chỉ nhánh tải. Khi xác định giới hạn dòng tải liên tục, phải trừ phần dự phòng dòng tự tiêu thụ quy về đầu vào nguồn:
-
-```text
-Giới hạn dòng tải liên tục cho phép ≤ min(
-    giới hạn dòng tải liên tục của sản phẩm,
-    khả năng cấp dòng liên tục của nguồn − dự phòng dòng tự tiêu thụ đầu vào,
-    giới hạn dòng liên tục của profile tải
-)
-```
-
-Phần dự phòng phải xét miền V_in, chế độ hoạt động và dung sai; không dùng trực tiếp dòng trên rail 5 V hoặc 3.3 V thay cho dòng lấy từ nguồn ngoài. Giá trị dự phòng cụ thể còn TBD, được tính toán và kiểm chứng khi thiết kế phần cứng; chưa yêu cầu thêm cảm biến dòng tổng. Baseline dòng tải liên tục `1 A` không đổi: để sử dụng đủ mức này, nguồn phải còn đáp ứng phần tự tiêu thụ của thiết bị. Ngưỡng fault quá tải và thời gian tác động phải phối hợp với giới hạn tải cho phép, có xét sai số đo và dung sai; không mặc định ngưỡng fault bằng đúng giới hạn cấu hình hoặc khả năng cấp dòng của nguồn.
-
-### FR-07 — Xử lý dòng khởi động và dòng đỉnh
-
-Khi dòng tải vượt giới hạn dòng liên tục nhưng vẫn nằm trong giới hạn dòng đỉnh và thời gian cho phép của cấu hình vận hành, hệ thống phải tiếp tục cấp điện cho tải và không tác động ngắt bảo vệ. Yêu cầu này không áp dụng đối với điều kiện quá dòng nghiêm trọng thuộc phạm vi bảo vệ nhanh.
-
-Miền dòng đỉnh được cấu hình cũng phải phù hợp với ngân sách nguồn sau khi dành phần tự tiêu thụ và khả năng cấp dòng của nguồn trong khoảng thời gian tương ứng. Baseline của mạch `2 A/1 s` không đồng nghĩa mọi nguồn đang kết nối đều cho phép cấp mức dòng đó.
-
-### FR-08 — Cảnh báo bất thường
-
-Khi phát hiện điều kiện bất thường nhưng chưa cần ngắt, hệ thống phải thông báo cho người dùng bằng trạng thái hoặc cảnh báo phù hợp. Các nhóm warning vận hành hiện tại gồm `V_in`, `I_load` và `V_drop` khi đang cấp điện; quá độ hợp lệ theo profile không tự là warning. Khi đang cấp điện, còn bất kỳ warning nào thì hệ thống giữ WARNING; chỉ về RUNNING khi mọi warning đã hết và không có fault. Các nguyên nhân được ghi nhận/xóa riêng, và warning không được che mất fault. Các tiêu chí định lượng vẫn TBD.
-
-### FR-09 — Ngắt bảo vệ
-
-Khi phát hiện điều kiện nguy hiểm, hệ thống phải ngắt đường truyền năng lượng từ nguồn đến tải và ghi nhận nguyên nhân. Bảo vệ trước quá dòng nghiêm trọng hoặc ngắn mạch không được phụ thuộc hoàn toàn vào tốc độ xử lý của firmware.
-
-### FR-10 — Duy trì trạng thái sau khi ngắt
-
-Trong phiên vận hành hiện tại, sau khi xảy ra ngắt bảo vệ, hệ thống phải duy trì yêu cầu đường công suất OFF cho đến khi một yêu cầu phục hồi hợp lệ được chấp nhận theo FR-11. Trong thời gian nguồn nuôi khối điều khiển còn hợp lệ, hệ thống phải duy trì và cung cấp cho người dùng trạng thái ngắt cùng nguyên nhân đã ghi nhận.
-
-Sau MCU reset, hệ thống về INITIALIZING, nạp cấu hình mặc định và giữ đầu ra OFF; không khôi phục bản ghi fault phần mềm của phiên trước. Nếu kiểm tra lại phát hiện lỗi thì vào FAULT; nếu mọi Startup Checks đều đạt thì về READY/OFF và cần lệnh ON riêng. Reset vì vậy có thể thay thế bước phục hồi của fault phần mềm không còn được phát hiện sau khởi động; điều này không chứng minh nguyên nhân vật lý đã được khắc phục và không phải tự động retry.
-
-MCU reset không tự gửi yêu cầu clear HW_OCP. Khi khởi động, nếu trạng thái hợp lệ từ phần cứng vẫn báo lỗi quá dòng được giữ thì hệ thống phải vào FAULT và phục hồi thủ công theo FR-11; chưa đọc được trạng thái hợp lệ thì chưa được kết luận đủ điều kiện vào READY. Việc giữ trạng thái phần cứng qua reset phụ thuộc nguồn nuôi và thiết kế latch. Phiên bản hiện tại không yêu cầu lưu lỗi bền vững qua mất nguồn hoàn toàn, không mặc định latch giữ lỗi sau mất nguồn.
-
-Với HW_OCP, thông tin lỗi được cam kết là trạng thái đã phát hiện quá dòng nghiêm trọng và đang giữ khóa ngắt. Không cam kết nhận diện nguyên nhân vật lý cụ thể, thu được dòng đỉnh hay điện áp tại thời điểm sự cố; các giá trị đo sau ngắt không thay thế dữ liệu tại thời điểm lỗi. Chưa yêu cầu chức năng thu thập/lưu dữ liệu sự cố hoặc lịch sử lỗi qua reset/mất nguồn.
-
-### FR-11 — Phục hồi hoạt động
-
-Hệ thống phải hỗ trợ phục hồi thủ công theo yêu cầu người dùng, không tự động thử cấp điện lại sau lỗi. Kiểm tra phục hồi phải xét điều kiện chung, nguyên nhân lỗi và nơi giữ lỗi; chỉ về READY khi kiểm tra đạt và mọi lỗi ngăn phục hồi đã được xóa thành công. Đầu ra vẫn OFF và người dùng phải gửi yêu cầu ON riêng. Trong READY, hệ thống tiếp tục giám sát để duy trì điều kiện cho phép bật; không có bước Enable Checks riêng sau lệnh ON. Xóa latch thành công không chứng minh tải đã hết ngắn mạch; bảo vệ vẫn phải sẵn sàng khi cấp điện lại.
-
-### FR-12 — Giao diện người dùng
-
-Hệ thống dùng Buttons để nhận thao tác và Display để cung cấp thông tin cho người dùng. Giao diện phải hỗ trợ:
-
-- bật hoặc tắt đầu ra;
-- chọn hoặc thay đổi cấu hình;
-- theo dõi `V_in`, `V_load`, `I_load`;
-- nhận biết trạng thái vận hành, cảnh báo và nguyên nhân ngắt;
-- yêu cầu phục hồi sau lỗi.
-
-Loại màn hình, số lượng nút, giao tiếp và cách thao tác/nhập cấu hình chi tiết còn TBD.
+Thời gian cho phép được tính riêng cho thấp áp, quá áp và dòng cao theo từng khoảng liên tục; đặt lại khi điều kiện tương ứng không còn. Đạt điều kiện ngắt theo mức thì không chờ thời gian này. Dòng khởi động và dòng tăng cao khi vận hành dùng chung các ngưỡng và thời gian cấu hình; bảo vệ quá dòng nhanh bằng phần cứng tác động độc lập.
 
 ## 6. Yêu cầu hiệu năng
 
-### 6.1. Bảng thông số hiện tại
+Các chỉ tiêu dưới đây xác định miền vận hành và mức hiệu năng mà thiết bị cần đáp ứng. Giới hạn chung của thiết bị không thay đổi theo cấu hình người dùng. Các ngưỡng cảnh báo, ngưỡng ngắt và thời gian cho phép phải được cấu hình phù hợp với những giới hạn này.
 
-| Mã | Thông số | Giá trị hiện tại | Trạng thái |
+Miền điện áp 5–15 V đã được lựa chọn cho đề tài. Các giá trị còn lại là mục tiêu thiết kế đang được xây dựng và đánh giá tính khả thi, chưa phải kết quả đo trên sản phẩm.
+
+### 6.1. Các chỉ tiêu hiệu năng
+
+| Mã | Thông số | Giá trị mục tiêu | Ý nghĩa và điều kiện áp dụng |
 | --- | --- | --- | --- |
-| PR-PERF-01 | Miền điện áp nguồn ngoài tại đầu nối vào (`V_in`) | `5–15 V DC` | Đã xác nhận |
-| PR-PERF-02 | Dòng tải liên tục định mức | `0–1 A` | Tạm thời |
-| PR-PERF-03 | Dòng đỉnh vận hành định mức | Trên `1 A` đến `2 A` | Tạm thời |
-| PR-PERF-04 | Thời gian liên tục tối đa trong miền dòng đỉnh | `1 s` | Tạm thời |
-| PR-PERF-05 | Sai số đo `V_in` | `±0,1 V` trong miền hoạt động `5–15 V` | Tạm thời |
-| PR-PERF-06 | Sai số đo `V_load` | `±0,1 V` trong miền đo `0–15 V` | Tạm thời |
-| PR-PERF-07 | Sai số đo `I_load` | `±0,05 A` trong miền đo `0–2 A` | Tạm thời |
-| PR-PERF-08 | Chu kỳ cập nhật giá trị và trạng thái trên giao diện | `≤ 200 ms` | Tạm thời |
-| PR-PERF-09 | Phản ứng với lỗi quá dòng nghiêm trọng | `≤ 100 µs` từ lúc dòng nhánh tải vượt ngưỡng HW_OCP đến khi Power Switch thực sự ngắt đường cấp điện từ nguồn tới tải | Tạm thời |
-| PR-PERF-10 | Độ trễ ngắt sau khi hết thời gian cho phép | `≤ 10 ms` | Tạm thời |
-| PR-PERF-11 | Sụt áp tại dòng liên tục `1 A` | `≤ 0,2 V` | Tạm thời |
-| PR-PERF-12 | Sụt áp tại dòng đỉnh `2 A` | `≤ 0,4 V` | Tạm thời |
+| PR-PERF-01 | Miền điện áp hoạt động | 5–15 V DC | Miền điện áp tại đầu nối nguồn vào mà thiết bị phải hoạt động đúng. Đây là giới hạn chung của thiết bị, không phải khoảng điện áp phù hợp với mọi tải. |
+| PR-PERF-02 | Dòng tải liên tục cho phép | 0–1 A | Miền dòng tải được phép đi qua liên tục, trong đó thiết bị phải đáp ứng các yêu cầu chức năng và đo lường. Đây cũng là giới hạn đặt ra cho cả hệ thống, không phải ngưỡng cảnh báo dòng cao do người dùng cấu hình. |
+| PR-PERF-03 | Dòng tải ngắn hạn cho phép | Trên 1 A đến 2 A, tối đa 1 s | Giới hạn dòng và thời gian vận hành ngắn hạn chung của thiết bị. Các ngưỡng và thời gian cấu hình phải phối hợp để không cho phép vận hành vượt giới hạn này. |
+| PR-PERF-04 | Sai số đo điện áp đầu vào | Không quá ±0,05 V | Sai số của toàn bộ kênh đo `V_in` trong phạm vi 5–15 V. |
+| PR-PERF-05 | Sai số đo điện áp tại tải | Không quá ±0,05 V | Sai số của toàn bộ kênh đo `V_load` trong phạm vi 0–15 V, phục vụ hiển thị và xác định sụt áp trên thiết bị. |
+| PR-PERF-06 | Sai số đo dòng tải | Không quá ±0,05 A | Sai số của toàn bộ kênh đo `I_load` trong phạm vi 0–2 A. |
+| PR-PERF-07 | Sai số xác định sụt áp | Không quá ±0,1 V | Sai số của `V_drop` = `V_in` − `V_load`, có xét sai số của cả hai kênh điện áp. Chỉ áp dụng khi đầu ra bật và các phép đo nằm trong phạm vi quy định. |
+| PR-PERF-08 | Chu kỳ cập nhật hiển thị | Không quá 200 ms | Khoảng thời gian giữa hai lần cập nhật giá trị đo và trạng thái trên giao diện. |
+| PR-PERF-09 | Ngưỡng tác động bảo vệ quá dòng nhanh | Chọn 2,5 A để kiểm thử ngắt phần cứng | Mức dòng làm bảo vệ phần cứng tác động độc lập với phần mềm, là thông số chung của thiết bị. |
+| PR-PERF-10 | Thời gian ngắt quá dòng bằng phần cứng | Không quá 100 µs | Tính từ khi dòng tải vượt ngưỡng tác động bảo vệ quá dòng nhanh đến khi đường cấp điện bị ngắt. |
+| PR-PERF-11 | Thời gian ngắt bảo vệ bằng phần mềm | Không quá 10 ms | Tính từ khi `V_in`, `I_load` hoặc `V_drop` đạt điều kiện ngắt (cả theo mức lẫn thời gian) đến khi đường cấp điện thật sự bị ngắt. |
+| PR-PERF-12 | Sụt áp ở dòng tải liên tục | Không quá 0,2 V tại 1 A | Điện áp bị mất trên đường công suất khi đầu ra bật, đo giữa hai đầu nối của thiết bị, không gồm dây dẫn bên ngoài. |
+| PR-PERF-13 | Sụt áp ở dòng tải ngắn hạn | Không quá 0,4 V tại 2 A | Điện áp bị mất trên đường công suất trong thời gian dòng ngắn hạn, đo giữa hai đầu nối của thiết bị, không gồm dây dẫn bên ngoài. |
 
-### 6.2. Miền vận hành dòng điện định mức
+### 6.2. Cơ sở lựa chọn các chỉ tiêu
 
-Hệ thống phải hỗ trợ dòng tải liên tục từ `0–1 A`. Dòng trên `1 A` đến `2 A` được phép tồn tại trong khoảng thời gian do profile tải quy định nhưng không quá `1 giây`. Trong miền vận hành này, hệ thống phải hoạt động đúng chức năng và không hư hỏng nếu cấu hình đang chọn cho phép điều kiện đó.
+**a. Phạm vi nguồn, tải**
 
-Dòng vượt `2 A` hoặc vượt giới hạn thời gian nằm ngoài miền vận hành định mức và phải được xử lý bởi chức năng bảo vệ. `2 A/1 s` là biên trên của miền sử dụng được công bố và là điều kiện tối thiểu mà thiết kế phải đáp ứng; đây không phải giới hạn phá hủy tuyệt đối của linh kiện.
+Mức 5–15 V là khoảng điện áp nhóm đặt ra để thiết kế. Còn các giá trị, thông số liên quan đến điện áp đến từ các loại tải dự định sẽ được kiểm thử sau:
 
-Ngưỡng tác động chính xác của bảo vệ nhanh và giới hạn chịu đựng tuyệt đối của phần cứng hiện là TBD.
+- Tải ổn định có dòng liên tục đến 1 A.
+- Tải có dòng khởi động cao có dòng vận hành đến 1 A. Dòng khởi động có thể lên đến 2 A, với thời gian trên 1 A không quá 1 s.
+- Tải có dòng biến thiên khi hoạt động có dòng thay đổi trong miền đến 1 A. Các đợt vượt 1 A phải nằm trong giới hạn 2 A, tối đa 1 s và đáp ứng điều kiện lặp lại.
 
-### 6.3. Thời gian phản ứng bảo vệ
+**b. Mức sụt áp chấp nhận được**
 
-Bảo vệ nhanh áp dụng cho lỗi quá dòng nghiêm trọng và không được phụ thuộc hoàn toàn vào firmware. Theo PR-PERF-09, thời gian phản ứng được tính từ lúc dòng nhánh tải vượt ngưỡng HW_OCP đến khi Power Switch thực sự ngắt đường cấp điện từ nguồn tới tải. Khoảng này bao gồm độ trễ đo/phát hiện, giữ lỗi và điều khiển, cùng độ trễ ngắt phần tử công suất; không chỉ tính từ lúc xác lập tín hiệu lỗi hoặc đến lúc phát yêu cầu shutdown. Giá trị `≤ 100 µs` vẫn là baseline tạm thời.
-
-Ngưỡng HW_OCP cụ thể, dung sai, điều kiện thử và tiêu chí điện xác nhận đã ngắt sẽ được xác định trong Hardware/Test Specification. Không yêu cầu V_load về 0 tức thời vì tụ phía tải có thể còn điện. Kiểm chứng bằng thiết bị đo ngoài, không yêu cầu MCU ghi lại dạng sóng hoặc dữ liệu lúc sự cố.
-
-Bảo vệ có xử lý thời gian chỉ bắt đầu tính độ trễ ngắt sau khi điều kiện lỗi đã tồn tại hết khoảng thời gian mà profile cho phép.
-
-Ví dụ, nếu profile cho phép một mức dòng trong `500 ms`, tổng thời gian trước khi ngắt có thể đạt `510 ms`: `500 ms` thời gian được phép và tối đa `10 ms` độ trễ xử lý ngắt.
-
-### 6.4. Sụt áp đường công suất
-
-Các giới hạn sụt áp được đánh giá giữa đầu nối vào và đầu nối ra của PCB, không bao gồm dây dẫn bên ngoài. Chúng kiểm soát tổng ảnh hưởng của Input Protection, phần tử đo dòng, công tắc công suất, đường đồng, đầu nối và mối tiếp xúc. Với vị trí đo theo FR-02 và FR-03, `V_drop = V_in − V_load` bao gồm các phần này khi đường công suất ON và đã xét quá độ hợp lệ. Kiểm chứng giới hạn hiệu năng dùng thiết bị đo tham chiếu tại hai đầu nối; phép tính từ hai kênh đo nội bộ phải xét sai số, không thay thế phép đo tham chiếu.
-
-Ở điểm kiểm thử `1 A`, giới hạn `0,2 V` tương ứng với tỉ số `V_drop/I_load` tối đa `0,2 Ω` và tích `V_drop × I_load` tối đa `0,2 W`. Đây là các giá trị quy đổi theo dòng tải, không mặc định là điện trở vật lý hay tổng tổn hao của mọi phần tử trên đường công suất: đoạn chung qua Input Protection còn mang dòng cấp nhánh điều khiển. Giá trị tại `2 A` là điều kiện ngắn hạn.
-
-### 6.5. Độ phân giải và độ chính xác
-
-Độ phân giải hiển thị không được dùng để thay thế yêu cầu về độ chính xác. Độ phân giải hiển thị và tần số lấy mẫu nội bộ hiện là TBD. Sai số xấu nhất của `V_drop` tính từ hai kênh điện áp có thể lớn hơn sai số của từng kênh và phải được xét khi xây dựng ngưỡng chẩn đoán.
-
-Mạch đo `V_in` phải có khả năng nhận biết điện áp nằm phía trên giới hạn hoạt động `15 V` để hệ thống không cấp điện cho tải trong điều kiện quá áp. Miền phát hiện quá áp, độ chính xác ngoài miền hoạt động và giới hạn điện áp chịu đựng tuyệt đối hiện là TBD.
-
-Miền nguồn 5–15 V được xác định trước Input Protection, không phải tại nút điện áp sau bảo vệ (`V_protected`). Ngưỡng warning/fault phải xét sai số đo, cấu hình và hysteresis; chưa chốt giá trị cụ thể chỉ từ hai biên vận hành. Bảo vệ đầu vào đo V_in phải xét cả tình huống có điện áp nguồn ngoài khi khối đo/MCU chưa được cấp nguồn; chi tiết được xác định trong Hardware Specification.
+Thiết bị được đặt nối tiếp trên đường công suất nối giữa nguồn và tải nên gây một lượng sụt áp nhất định. Lấy mức nguồn thấp nhất mà hệ thống chấp nhận là 5 V, mục tiêu là sụt áp không quá 4% cho ngưỡng dòng tải liên tục thiết bị cho phép, tương đương sụt không quá 0,2 V tại 1 A. Và sụt không quá 8% cho ngưỡng dòng ngắn hạn cho phép, tương đương sụt không quá 0,4 V tại 2 A.
 
 ## 7. Chi phí sản xuất
 
-| Mã | Hạng mục | Mục tiêu hiện tại | Trạng thái |
-| --- | --- | --- | --- |
-| PR-COST-01 | BOM cho một bo mạch | `≤ 600.000 VNĐ` | Tạm thời |
-| PR-COST-02 | Một prototype hoàn chỉnh gồm PCB và linh kiện | `≤ 1.000.000 VNĐ` | Tạm thời |
+Mã nhóm: PR-COST-XX (Product Requirement – Cost)
 
-Giá thành sản phẩm có thể bao gồm linh kiện trên PCB, chế tạo PCB, lắp ráp và vỏ nếu có. Giá thành không bao gồm nguồn DC bên ngoài, tải kiểm thử, mạch nạp/debugger, thiết bị đo, chi phí nghiên cứu và linh kiện mua dư.
+Các mức chi phí dưới đây là mục tiêu dự kiến cho một bo mạch và một mẫu thử hoàn chỉnh.
+
+| Mã | Hạng mục | Chi phí dự kiến |
+| --- | --- | --- |
+| PR-COST-01 | Linh kiện cho một bo mạch theo danh sách BOM | Không quá 600.000 đồng |
+| PR-COST-02 | Chế tạo một mẫu thử hoàn chỉnh | Không quá 1.000.000 đồng |
+
+Chi phí mẫu thử bao gồm linh kiện, chế tạo PCB, lắp ráp và vỏ nếu có. Chi phí này không bao gồm nguồn DC bên ngoài, tải kiểm thử, mạch nạp, thiết bị đo, chi phí nghiên cứu và linh kiện mua dư.
 
 ## 8. Nguồn nuôi hệ thống
 
-**PR-PWR-01 — Đã xác nhận:** Hệ thống phải tự cấp nguồn cho khối điều khiển, đo lường và giao diện từ nguồn DC đầu vào, thông qua một nhánh nguồn nội bộ được bảo vệ và điều chỉnh điện áp riêng. Nhánh này lấy sau Input Protection và trước công tắc công suất của tải để việc ngắt tải không chủ động cắt nguồn điều khiển. Thiết kế phải xét tổn hao Input Protection trên toàn miền V_in 5–15 V. Khả năng tiếp tục giám sát khi tải bị ngắt phụ thuộc nguồn nội bộ còn hoạt động; không bảo đảm duy trì MCU nếu Input Protection đã cô lập nguồn hoặc nguồn ngoài mất/sụt ngoài khả năng vận hành.
+Mã nhóm: PR-PWR-XX (Product Requirement – Power)
 
-**PR-PWR-02 — Đã xác nhận:** Khi nguồn nuôi điều khiển mất hoặc không ổn định, đường công suất phải mặc định ở trạng thái OFF.
+| Mã | Hạng mục | Yêu cầu |
+| --- | --- | --- |
+| PR-PWR-01 | Nguồn cấp cho thiết bị | Lấy điện từ nguồn DC đầu vào để nuôi khối điều khiển, đo lường và giao diện. Nhánh nguồn nội bộ được bảo vệ và điều chỉnh điện áp, lấy trước công tắc công suất của tải để việc ngắt tải không đồng thời cắt nguồn điều khiển. Khả năng tiếp tục hoạt động phụ thuộc nguồn nuôi nội bộ còn hợp lệ. |
+| PR-PWR-02 | Trạng thái khi mất nguồn điều khiển | Đường cấp điện cho tải phải mặc định tắt khi nguồn nuôi khối điều khiển bị mất hoặc không ổn định. |
+| PR-PWR-03 | Nguồn phụ | Không cần nguồn phụ trong vận hành bình thường. |
+| PR-PWR-04 | Công suất tự tiêu thụ | Mục tiêu dự kiến không quá 1 W trong miền điện áp đầu vào 5–15 V khi không nối tải và thiết bị đã hoạt động ổn định. Áp dụng ở cả trạng thái bật và tắt đầu ra. |
 
-**PR-PWR-03 — Đã xác nhận:** Hệ thống không yêu cầu nguồn phụ trong vận hành bình thường.
-
-**PR-PWR-04 — Tạm thời:** Công suất tự tiêu thụ của thiết bị không được vượt quá `1 W` trong miền điện áp hoạt động.
-
-Công suất tự tiêu thụ không bao gồm công suất truyền tới tải và tổn hao trên đường công suất.
+Công suất tự tiêu thụ được đo tại đầu nối nguồn DC khi các khối điều khiển, đo lường và giao diện hoạt động bình thường. Phép đo không nối tải loại trừ công suất cấp cho tải và tổn hao do dòng tải.
 
 ## 9. Kích thước và khối lượng
 
-| Mã | Thông số | Giá trị hiện tại | Trạng thái |
-| --- | --- | --- | --- |
-| PR-PHY-01 | Kích thước PCB tối đa | `100 × 100 mm` | Tạm thời |
-| PR-PHY-02 | Chiều cao linh kiện tối đa | `30 mm` | Tạm thời |
-| PR-PHY-03 | Khối lượng PCB đã lắp ráp | `≤ 150 g` | Tạm thời |
-| PR-PHY-04 | Vỏ sản phẩm | Không bắt buộc cho prototype đầu tiên | Tạm thời |
+Mã nhóm: PR-PHY-XX (Product Requirement – Physical Size)
 
-Các giới hạn không bao gồm nguồn, tải, dây kết nối rời hoặc mạch nạp. Bố trí vật lý phải ưu tiên khả năng lắp ráp, đo kiểm và tản nhiệt hơn việc thu nhỏ kích thước.
+Các giới hạn dưới đây là mục tiêu thiết kế dự kiến cho mẫu thử đầu tiên.
+
+| Mã | Thông số | Giới hạn dự kiến |
+| --- | --- | --- |
+| PR-PHY-01 | Kích thước PCB | Không quá 100 × 100 mm |
+| PR-PHY-02 | Chiều cao linh kiện | Không quá 30 mm |
+| PR-PHY-03 | Khối lượng PCB đã lắp ráp | Không quá 150 g |
+| PR-PHY-04 | Vỏ thiết bị | Không bắt buộc đối với mẫu thử đầu tiên |
+
+Kích thước và khối lượng không bao gồm nguồn DC bên ngoài, tải, dây kết nối rời hoặc mạch nạp. Bố trí linh kiện cần thuận tiện cho lắp ráp, đo kiểm và tản nhiệt.
 
 ## 10. Lắp đặt
 
-- **PR-INST-01:** Thiết bị được thiết kế để sử dụng trên bàn thí nghiệm trong môi trường trong nhà, khô ráo và thông thoáng.
-- **PR-INST-02:** PCB phải được cố định bằng lỗ bắt vít và chân đỡ cách điện hoặc đặt trong vỏ phù hợp; không được đặt trực tiếp lên bề mặt dẫn điện.
-- **PR-INST-03:** Cổng nguồn vào và cổng tải ra phải dễ tiếp cận, được phân biệt rõ ràng và có ký hiệu cực tính.
-- **PR-INST-04:** Thiết bị chỉ được kết nối với nguồn DC thấp áp trong miền cho phép, không được nối trực tiếp với điện lưới AC.
-- **PR-INST-05:** Việc đấu nối không yêu cầu dụng cụ chuyên dụng ngoài dụng cụ cơ bản phù hợp với loại đầu nối được chọn.
+Mã nhóm: PR-INST-XX (Product Requirement – Installation)
 
-Loại đầu nối, số lượng lỗ bắt vít và vị trí lắp cụ thể là TBD và sẽ được xác định trong Hardware Specification.
+| Mã | Yêu cầu |
+| --- | --- |
+| PR-INST-01 | Sử dụng thiết bị trên bàn thí nghiệm, trong nhà, tại nơi khô ráo và thông thoáng. |
+| PR-INST-02 | Cố định PCB bằng lỗ bắt vít và chân đỡ cách điện hoặc đặt trong vỏ phù hợp. Không đặt PCB trực tiếp lên bề mặt dẫn điện. |
+| PR-INST-03 | Đầu nối nguồn vào và tải ra phải dễ tiếp cận, có nhãn phân biệt và ký hiệu cực tính. |
+| PR-INST-04 | Chỉ kết nối với nguồn DC trong miền điện áp cho phép; không nối trực tiếp với điện lưới AC. |
+| PR-INST-05 | Việc đấu nối chỉ cần dụng cụ cơ bản phù hợp với loại đầu nối được chọn. |
+
+Loại đầu nối, số lượng và vị trí lỗ bắt vít sẽ được xác định trong thiết kế phần cứng.
 
 ## 11. Phương pháp kiểm chứng dự kiến
 
-| Nhóm yêu cầu | Phương pháp dự kiến |
-| --- | --- |
-| Đầu vào/đầu ra và chức năng | Kiểm tra tài liệu thiết kế và thử nghiệm tích hợp |
-| Đo `V_in`, `V_load`, `I_load` | So sánh với thiết bị đo tham chiếu tại nhiều điểm trong miền hoạt động |
-| Dòng liên tục, dòng đỉnh và sụt áp | Tạo tải có kiểm soát và đo bằng đồng hồ cùng oscilloscope |
-| Phản ứng bảo vệ nhanh | Tạo sự kiện vượt ngưỡng HW_OCP có kiểm soát và giới hạn năng lượng; dùng oscilloscope đo từ lúc dòng vượt ngưỡng đến khi Power Switch thực sự ngắt cấp điện, theo PR-PERF-09 và tiêu chí Hardware/Test Specification |
-| Cập nhật giao diện và logic ngắt | Đo thời gian sự kiện–phản ứng và quan sát trạng thái hệ thống |
-| Chi phí | Tổng hợp BOM, hóa đơn PCB và linh kiện sử dụng thực tế |
-| Nguồn nuôi và fail-safe | Thử đóng/ngắt nguồn, brownout, reset MCU và trạng thái công tắc tải |
-| Kích thước, khối lượng và lắp đặt | Đo trực tiếp và kiểm tra bằng quan sát |
+Các yêu cầu được kiểm tra bằng quan sát, đo lường và thử nghiệm trên mẫu thử. Bảng dưới đây nêu phương pháp dự kiến; điều kiện thử và tiêu chí đạt cụ thể sẽ được lập trong tài liệu kiểm thử.
 
-Các phép thử chi tiết, điều kiện thử, thiết bị và tiêu chí pass/fail sẽ được định nghĩa trong Test Specification.
-
-## 12. Các vấn đề chưa chốt
-
-Các quyết định sau chưa được chốt trong Product Requirement v0.1:
-
-1. Ngưỡng cảnh báo, ngưỡng ngắt và thời gian cho phép cụ thể của từng profile tải.
-2. Ngưỡng tác động và dung sai của bảo vệ quá dòng nhanh.
-3. Giới hạn điện áp, dòng và năng lượng tuyệt đối của phần cứng ngoài miền vận hành định mức.
-4. Tiêu chí kiểm tra phục hồi theo từng loại lỗi và thời gian chờ cụ thể; phục hồi thủ công, không tự động retry và cần lệnh ON riêng đã được chốt.
-5. Độ phân giải hiển thị và tần số lấy mẫu nội bộ cần thiết.
-6. Loại màn hình, số lượng nút, giao tiếp và cách thao tác/nhập cấu hình chi tiết; hình thức Buttons + Display đã được xác định.
-7. Loại đầu nối nguồn và tải.
-8. Điều kiện nhiệt độ, độ ẩm định lượng cho môi trường vận hành.
-9. Tần suất cho phép của các sự kiện dòng đỉnh lặp lại.
-10. Khả năng bổ sung profile tải `CUSTOM`.
-11. Giá trị cụ thể của bộ cấu hình mặc định khi cấp nguồn/reset.
-
-Các mục này phải được giải quyết hoặc chuyển thành ràng buộc rõ ràng trong Design Specification, Hardware Specification, Software Specification hoặc Test Specification trước khi chế tạo PCB.
+| Nhóm yêu cầu | Phương pháp kiểm tra | Cơ sở đánh giá |
+| --- | --- | --- |
+| Đầu vào, đầu ra và chức năng | Thực hiện các tình huống sử dụng ở mục 4; kiểm tra thao tác bật/tắt, chọn cấu hình, cảnh báo, ngắt và phục hồi. | Đối chiếu kết quả với mục 3 và FR-01 đến FR-11. |
+| Đo điện áp, dòng tải và sụt áp | So sánh giá trị đo và `V_drop` tính từ hai kênh điện áp với thiết bị đo tham chiếu tại nhiều điểm trong miền đo. | Sai số theo PR-PERF-04 đến PR-PERF-07. |
+| Dòng liên tục, dòng ngắn hạn và sụt áp | Dùng tải có kiểm soát. Đo dòng tải, thời gian dòng ngắn hạn và sụt áp giữa hai đầu nối của thiết bị. | PR-PERF-01 đến PR-PERF-03, PR-PERF-12 và PR-PERF-13. |
+| Ngưỡng và thời gian ngắt bảo vệ | Đo ngưỡng tác động và thời gian ngắt bằng phần cứng. Với phần mềm, thử riêng khi đại lượng đạt ngưỡng ngắt và khi hết thời gian cho phép mà cảnh báo vẫn còn. Đo từ mốc tương ứng đến khi đường cấp điện bị ngắt. | PR-PERF-09 đến PR-PERF-11. |
+| Cập nhật giao diện | Đo khoảng thời gian giữa các lần cập nhật giá trị và trạng thái trên giao diện. | PR-PERF-08. |
+| Chi phí | Tổng hợp BOM, hóa đơn PCB, linh kiện và các chi phí chế tạo liên quan. | PR-COST-01 và PR-COST-02. |
+| Nguồn nuôi và trạng thái mất nguồn | Thử đóng/ngắt nguồn, sụt nguồn điều khiển, reset bộ điều khiển và ngắt đầu ra tải. Quan sát đường công suất và khối điều khiển. Đối với PR-PWR-04, đo công suất tại đầu nối nguồn khi không nối tải, ở cả hai trạng thái đầu ra bật và tắt sau khi thiết bị ổn định. Kiểm tra mức lớn nhất ghi nhận trong miền 5–15 V. | PR-PWR-01 đến PR-PWR-04. |
+| Kích thước, khối lượng và lắp đặt | Đo kích thước, cân PCB đã lắp ráp; quan sát đầu nối, nhãn cực tính và cách cố định bo mạch. | PR-PHY-01 đến PR-PHY-04 và PR-INST-01 đến PR-INST-05. |
