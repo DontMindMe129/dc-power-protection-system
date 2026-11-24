@@ -22,6 +22,9 @@ Thumbs.db
 *.lock
 *.tmp
 *.bak
+.history/
+*.kicad_prl
+fp-info-cache
 
 # Đầu ra mô phỏng tạm thời
 *.raw
@@ -37,5 +40,8 @@ Thumbs.db
 *.odp
 ~$*.doc*
 ~$*.ppt*
+
+# Kế hoạch làm việc cục bộ, không đưa lên GitHub
+/plans/
 
 # Lưu bằng chứng kiểm chứng đã chọn lọc trong verification/results/
