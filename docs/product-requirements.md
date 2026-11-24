@@ -123,7 +123,7 @@ Miền điện áp 5–15 V đã được lựa chọn cho đề tài. Các giá
 | PR-PERF-06 | Sai số đo dòng tải | Không quá ±0,05 A | Sai số của toàn bộ kênh đo `I_load` trong phạm vi 0–2 A. |
 | PR-PERF-07 | Sai số xác định sụt áp | Không quá ±0,1 V | Sai số của `V_drop` = `V_in` − `V_load`, có xét sai số của cả hai kênh điện áp. Chỉ áp dụng khi đầu ra bật và các phép đo nằm trong phạm vi quy định. |
 | PR-PERF-08 | Chu kỳ cập nhật hiển thị | Không quá 200 ms | Khoảng thời gian giữa hai lần cập nhật giá trị đo và trạng thái trên giao diện. |
-| PR-PERF-09 | Ngưỡng tác động bảo vệ quá dòng nhanh | Chọn 2,5 A để kiểm thử ngắt phần cứng | Mức dòng làm bảo vệ phần cứng tác động độc lập với phần mềm, là thông số chung của thiết bị. |
+| PR-PERF-09 | Ngưỡng tác động bảo vệ quá dòng nhanh | Ngưỡng tác động thực tế >2 A và ≤2,5 A | Giới hạn tác động muộn nhất của HW_OCP, hoạt động độc lập với phần mềm. Giá trị danh định và dung sai được lựa chọn để đáp ứng giới hạn này. |
 | PR-PERF-10 | Thời gian ngắt quá dòng bằng phần cứng | Không quá 100 µs | Tính từ khi dòng tải vượt ngưỡng tác động bảo vệ quá dòng nhanh đến khi đường cấp điện bị ngắt. |
 | PR-PERF-11 | Thời gian ngắt bảo vệ bằng phần mềm | Không quá 10 ms | Tính từ khi `V_in`, `I_load` hoặc `V_drop` đạt điều kiện ngắt (cả theo mức lẫn thời gian) đến khi đường cấp điện thật sự bị ngắt. |
 | PR-PERF-12 | Sụt áp ở dòng tải liên tục | Không quá 0,2 V tại 1 A | Điện áp bị mất trên đường công suất khi đầu ra bật, đo giữa hai đầu nối của thiết bị, không gồm dây dẫn bên ngoài. |
@@ -165,7 +165,7 @@ Mã nhóm: PR-PWR-XX (Product Requirement – Power)
 | PR-PWR-01 | Nguồn cấp cho thiết bị | Lấy điện từ nguồn DC đầu vào để nuôi khối điều khiển, đo lường và giao diện. Nhánh nguồn nội bộ được bảo vệ và điều chỉnh điện áp, lấy trước công tắc công suất của tải để việc ngắt tải không đồng thời cắt nguồn điều khiển. Khả năng tiếp tục hoạt động phụ thuộc nguồn nuôi nội bộ còn hợp lệ. |
 | PR-PWR-02 | Trạng thái khi mất nguồn điều khiển | Đường cấp điện cho tải phải mặc định tắt khi nguồn nuôi khối điều khiển bị mất hoặc không ổn định. |
 | PR-PWR-03 | Nguồn phụ | Không cần nguồn phụ trong vận hành bình thường. |
-| PR-PWR-04 | Công suất tự tiêu thụ | Mục tiêu dự kiến không quá 1 W trong miền điện áp đầu vào 5–15 V khi không nối tải và thiết bị đã hoạt động ổn định. Áp dụng ở cả trạng thái bật và tắt đầu ra. |
+| PR-PWR-04 | Công suất tự tiêu thụ | Mục tiêu dự kiến không quá 2 W trong miền điện áp đầu vào 5–15 V khi không nối tải và thiết bị đã hoạt động ổn định. Áp dụng ở cả trạng thái bật và tắt đầu ra. |
 
 Công suất tự tiêu thụ được đo tại đầu nối nguồn DC khi các khối điều khiển, đo lường và giao diện hoạt động bình thường. Phép đo không nối tải loại trừ công suất cấp cho tải và tổn hao do dòng tải.
 

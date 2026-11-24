@@ -1,6 +1,6 @@
 # Concept hệ thống giám sát và bảo vệ đường nguồn DC
 
-> Trạng thái: concept được cập nhật theo các quyết định hiện tại. Tài liệu tóm tắt ý tưởng và phạm vi; yêu cầu chi tiết nằm trong [`product-requirements.md`](product-requirements.md), kiến trúc và hành vi nằm trong [`design-specification.md`](design-specification.md).
+> Trạng thái: đồng bộ nội dung theo Product Requirements phiên bản 2 ngày 2026-11-05, giữ các quyết định kiến trúc và phạm vi đã thống nhất. Tài liệu tóm tắt ý tưởng và phạm vi; yêu cầu chi tiết nằm trong [`product-requirements.md`](product-requirements.md), kiến trúc và hành vi nằm trong [`design-specification.md`](design-specification.md).
 
 ## 1. Mục tiêu
 
@@ -30,14 +30,14 @@ Hệ thống có hai loại luồng:
 - **Công suất:** nhận năng lượng từ nguồn DC và truyền tới tải qua đường công suất có khả năng đóng/ngắt.
 - **Thông tin:** nhận lệnh và cấu hình vận hành qua Buttons; trả về giá trị đo, trạng thái và cảnh báo qua Display. Loại màn hình, số nút và giao tiếp cụ thể còn TBD.
 
-Tải vật lý không phải một phần của hệ thống. Cấu hình tải chỉ mô tả miền hành vi được phép để hệ thống lựa chọn cách giám sát và bảo vệ phù hợp.
+Tải vật lý không phải một phần của hệ thống. Cấu hình vận hành xác định các ngưỡng cảnh báo/ngắt áp, dòng và sụt áp, cùng thời gian cho phép của cảnh báo thấp áp, quá áp và dòng cao; không thay đổi các giới hạn chung của thiết bị.
 
 ## 4. Đại lượng cần đo
 
 - `V_in`: điện áp tại đầu nối nguồn vào của PCB, trước Input Protection.
 - `V_load`: điện áp tại đầu nối tải ra của PCB, sau Power Switch.
 - `I_load`: dòng đi trên nhánh tải, không bao gồm dòng tự tiêu thụ của thiết bị.
-- `V_drop = V_in − V_load`: độ sụt áp toàn đường công suất giữa hai đầu nối PCB khi công tắc công suất đang bật và đã xét quá độ hợp lệ, bao gồm Input Protection nhưng không bao gồm dây bên ngoài.
+- `V_drop = V_in − V_load`: độ sụt áp toàn đường công suất giữa hai đầu nối PCB khi công tắc công suất đang bật, bao gồm Input Protection nhưng không bao gồm dây bên ngoài. Không dùng chênh lệch này để đánh giá sụt áp đường dẫn khi công tắc tắt.
 
 Đầu vào đo `V_in` có bảo vệ phù hợp trong khối Voltage Sensing vì lấy mẫu trước Input Protection. Điện áp sau Input Protection được gọi là `V_protected`, không đồng nhất với `V_in` và chưa yêu cầu thêm kênh đo riêng.
 
@@ -62,8 +62,11 @@ Ngân sách nguồn phải dành phần tự tiêu thụ của thiết bị trư
 
 ## 6. Nguyên tắc bảo vệ
 
-- Firmware giám sát các giá trị đo, xử lý điều kiện có thời gian và cung cấp thông tin cho người dùng.
-- Sự cố quá dòng có khả năng gây hư hỏng phải có đường bảo vệ phần cứng, không phụ thuộc hoàn toàn vào firmware.
+- Firmware đánh giá các giá trị đo theo ngưỡng và thời gian cấu hình; cảnh báo khi chưa cần ngắt, ngắt khi đạt điều kiện về mức hoặc thời gian.
+- Thấp áp, quá áp và dòng cao có thời gian cho phép riêng, tính theo từng khoảng liên tục và đặt lại khi điều kiện tương ứng không còn. Không mặc định mọi cảnh báo đều có timeout; V_drop chỉ được đánh giá khi đầu ra ON.
+- Dòng khởi động và dòng tăng cao trong vận hành dùng chung quy tắc mức dòng–thời gian. Một đợt dòng còn được phép tiếp tục cấp điện vẫn có thể tạo cảnh báo; không miễn ngắt chỉ vì tải đang khởi động.
+- Sự cố quá dòng có khả năng gây hư hỏng phải có đường bảo vệ phần cứng, không phụ thuộc hoàn toàn vào firmware và không chờ thời gian cho phép của phần mềm.
+- Input Protection bảo vệ đầu vào chung; hành vi đã thống nhất là ngắt nguồn chung khi quá áp đầu vào kéo dài. Cách thực hiện, miền sự cố và phối hợp với bảo vệ ngược cực/xung còn phải được thiết kế, không suy ra từ ngưỡng quá áp vận hành của MCU.
 - Khi MCU mất nguồn, reset hoặc chưa điều khiển hợp lệ, công tắc tải phải mặc định ở trạng thái OFF.
 - Trong phiên vận hành, lỗi đã được giữ cần yêu cầu phục hồi thủ công; phục hồi thành công vẫn OFF và cần lệnh ON riêng. Đổi cấu hình trong FAULT không tự xóa lỗi hoặc bật tải.
 - Sau reset, không khôi phục fault phần mềm của phiên trước; kiểm tra lại điều kiện hiện tại. Nếu HW_OCP còn giữ lỗi thì phải tiếp tục FAULT và phục hồi thủ công. Không yêu cầu lưu lỗi bền vững qua mất nguồn hoàn toàn.
@@ -71,14 +74,15 @@ Ngân sách nguồn phải dành phần tự tiêu thụ của thiết bị trư
 
 ## 7. Phạm vi ban đầu
 
-| Nội dung | Baseline hiện tại | Trạng thái |
+| Nội dung | Phạm vi hoặc mục tiêu hiện tại | Trạng thái |
 | --- | --- | --- |
 | Điện áp nguồn ngoài tại đầu nối vào (`V_in`) | `5–15 V DC` | Đã xác nhận |
-| Dòng tải liên tục | đến `1 A` | Tạm thời |
-| Dòng tải ngắn hạn | đến `2 A` trong tối đa `1 s` | Tạm thời |
+| Dòng tải liên tục | `0–1 A` | Mục tiêu thiết kế |
+| Dòng tải ngắn hạn | Trên `1 A` đến `2 A`, tối đa `1 s` khi cấu hình cho phép | Mục tiêu thiết kế |
+| Tác động bảo vệ quá dòng nhanh HW_OCP | Ngưỡng tác động thực tế `>2 A` và `≤2,5 A` | Giới hạn tác động muộn nhất; giá trị danh định và dung sai được chọn khi thiết kế, phối hợp với miền dòng vận hành đã quy định |
 | Sản phẩm cuối | PCB lắp ráp và kiểm thử được | Đã xác nhận |
 
-Ba profile tải ban đầu là `RESISTIVE`, `ELECTRONIC` và `FAN`, với tải đại diện lần lượt là tải thuần trở, tải điện tử có tụ đầu vào và quạt DC nhỏ. Điện trở công suất hoặc thiết bị tải điện tử được dùng để tạo điều kiện kiểm thử có kiểm soát; quạt giúp quan sát dòng khởi động và biến động dòng trong vận hành. Profile `ELECTRONIC` mô tả loại tải cần bảo vệ, không đồng nghĩa phải dùng thiết bị tải điện tử làm tải vận hành.
+Ba profile tải ban đầu đã thống nhất là `RESISTIVE`, `ELECTRONIC` và `FAN`, với tải đại diện lần lượt là tải thuần trở, tải điện tử có tụ đầu vào và quạt DC nhỏ. Các profile tổ chức bộ tham số theo loại tải và dùng chung quy tắc đánh giá; chúng không tạo các ngoại lệ bảo vệ riêng chỉ theo tên profile. Điện trở công suất hoặc thiết bị tải điện tử được dùng để tạo điều kiện kiểm thử có kiểm soát; quạt giúp quan sát dòng khởi động và biến động dòng trong vận hành. Profile `ELECTRONIC` mô tả loại tải cần bảo vệ, không đồng nghĩa phải dùng thiết bị tải điện tử làm tải vận hành.
 
 Động cơ DC hoặc servo chỉ được xem là phép thử mở rộng nếu nằm trong giới hạn của phần cứng. Phiên bản đầu không tự nhận dạng loại tải và không cam kết hỗ trợ mọi tải DC.
 
@@ -95,11 +99,11 @@ Ba profile tải ban đầu là `RESISTIVE`, `ELECTRONIC` và `FAN`, với tải
 ## 9. Những điểm còn mở
 
 - giá trị cuối cùng của các baseline hiệu năng, gồm giới hạn dòng, thời gian dòng đỉnh và thời gian phản ứng bảo vệ nhanh;
-- ngưỡng, dung sai, timing, hysteresis và cách hiện thực các khối bảo vệ;
+- giá trị cụ thể của các ngưỡng/thời gian cấu hình, dung sai của mục tiêu HW_OCP 2,5 A, hysteresis và cách hiện thực các khối bảo vệ;
 - tiêu chí kiểm tra khởi động/phục hồi định lượng cho từng loại lỗi;
 - tham số cụ thể của ba profile, bộ cấu hình mặc định và khả năng bổ sung `CUSTOM`;
-- loại màn hình, số nút, giao tiếp và cách thao tác/nhập cấu hình chi tiết; loại đầu nối nguồn và tải;
+- loại màn hình, số nút, giao tiếp và cách thao tác/nhập cấu hình chi tiết; model và định mức của terminal block hai chân nguồn vào; loại đầu nối tải;
 - mức dự phòng dòng tự tiêu thụ và phân phối rail nguồn nội bộ;
 - giới hạn nhiệt, điện áp tuyệt đối và thiết bị kiểm thử sẵn có.
 
-Các điểm này sẽ được giải quyết dần trong đặc tả thành phần, tính toán, lựa chọn linh kiện và thử nghiệm. Chúng không mở lại các quyết định chức năng đã chốt; xem Product Requirements và Design Specification để phân biệt baseline tạm thời với hành vi đã xác nhận.
+Các điểm này sẽ được giải quyết dần trong đặc tả thành phần, tính toán, lựa chọn linh kiện và thử nghiệm. Các chỉ tiêu ngoài miền điện áp đã chọn vẫn là mục tiêu thiết kế, chưa phải kết quả kiểm chứng. Chúng không tự thay đổi các quyết định chức năng đã thống nhất; xem Product Requirements v2 và Design Specification để biết các ràng buộc và hành vi cụ thể.

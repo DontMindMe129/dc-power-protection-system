@@ -379,18 +379,21 @@
     </mxGraphModel>
   </diagram>
   <diagram id="0O92HS7JkYb5ln2RhnAR" name="input-protection">
-    <mxGraphModel dx="2427" dy="1295" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1371" dy="648" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="qELzDSHmtdj1RLCkGn6M-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
-          <mxGeometry height="280" width="600" x="520.0000000000002" y="160" as="geometry" />
+          <mxGeometry height="280" width="800" x="520" y="160" as="geometry" />
         </mxCell>
         <mxCell id="qELzDSHmtdj1RLCkGn6M-2" edge="1" parent="1" source="qELzDSHmtdj1RLCkGn6M-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="qELzDSHmtdj1RLCkGn6M-6">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="qELzDSHmtdj1RLCkGn6M-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Input Interface" vertex="1">
           <mxGeometry height="60" width="120" x="560.0000000000002" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="byycIuR4SIaWf4iYUbFO-2" edge="1" parent="1" source="qELzDSHmtdj1RLCkGn6M-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;" target="byycIuR4SIaWf4iYUbFO-1">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="qELzDSHmtdj1RLCkGn6M-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Reverse-polarity Protection" vertex="1">
           <mxGeometry height="60" width="120" x="960.0000000000002" y="200" as="geometry" />
@@ -407,17 +410,17 @@
             <mxPoint x="850.0000000000002" y="160" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="qELzDSHmtdj1RLCkGn6M-8" edge="1" parent="1" source="qELzDSHmtdj1RLCkGn6M-4" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" value="">
+        <mxCell id="qELzDSHmtdj1RLCkGn6M-8" edge="1" parent="1" source="byycIuR4SIaWf4iYUbFO-1" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
-            <mxPoint x="1280.0000000000002" y="230" as="sourcePoint" />
-            <mxPoint x="1280.0000000000002" y="230" as="targetPoint" />
+            <mxPoint x="1280.0000000000005" y="229" as="sourcePoint" />
+            <mxPoint x="1480.0000000000002" y="229" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="qELzDSHmtdj1RLCkGn6M-9" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="External DC" vertex="1">
           <mxGeometry height="30" width="60" x="400.0000000000002" y="200" as="geometry" />
         </mxCell>
-        <mxCell id="qELzDSHmtdj1RLCkGn6M-10" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Protected V_in" vertex="1">
-          <mxGeometry height="30" width="60" x="1160.0000000000002" y="200" as="geometry" />
+        <mxCell id="qELzDSHmtdj1RLCkGn6M-10" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;code&gt;&lt;font face=&quot;Helvetica&quot;&gt;V_protected&lt;/font&gt;&lt;/code&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="1360.0000000000002" y="199" as="geometry" />
         </mxCell>
         <mxCell id="qELzDSHmtdj1RLCkGn6M-11" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Input Protection" vertex="1">
           <mxGeometry height="30" width="60" x="520.0000000000002" y="130" as="geometry" />
@@ -441,6 +444,9 @@
         </mxCell>
         <mxCell id="qELzDSHmtdj1RLCkGn6M-15" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Power Return" vertex="1">
           <mxGeometry height="30" width="60" x="960.0000000000002" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="byycIuR4SIaWf4iYUbFO-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Overvoltage Disconnect" vertex="1">
+          <mxGeometry height="60" width="120" x="1160" y="200" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
