@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "DC_Power_Protection")(type "KiCad")(uri "${KIPRJMOD}/libraries/DC_Power_Protection.kicad_sym")(options "")(descr "Project-specific module symbols"))
+)
